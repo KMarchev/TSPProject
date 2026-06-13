@@ -1,0 +1,85 @@
+﻿@{
+    ViewData["Title"] = "Admin Menu";
+    Layout = "";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+
+    <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+            }
+
+            .admin-container {
+                background: white;
+                padding: 30px;
+                border-radius: 10px;
+                width: 350px;
+                box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            }
+
+                .admin-container h2 {
+                    text-align: center;
+                    margin-bottom: 25px;
+                }
+
+            .menu-button {
+                display: block;
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 10px;
+                background-color: #0d6efd;
+                color: white;
+                text-decoration: none;
+                text-align: center;
+                border-radius: 5px;
+                box-sizing: border-box;
+            }
+
+                .menu-button:hover {
+                    background-color: #0b5ed7;
+                }
+    </style>
+</head>
+<body>
+
+    <div class="admin-container">
+        <h2>Admin Menu</h2>
+
+        <a asp-controller="Admin"
+           asp-action="CreateAdminScientist"
+           class="menu-button">
+            Add Scientist
+        </a>
+
+        <a asp-controller="Admin"
+           asp-action="CreateLevelOneScientistOne"
+           class="menu-button">
+            Add Clearance Level 1 Scientist No1
+        </a>
+
+        <a asp-controller="Admin"
+           asp-action="CreateLevelOneScientistTwo"
+           class="menu-button">
+            Add Clearance Level 1 Scientist No2
+        </a>
+
+        <a asp-controller="Admin"
+           asp-action="GoBack"
+           class="menu-button">
+            Go back
+        </a>
+
+    </div>
+
+</body>
+</html>
