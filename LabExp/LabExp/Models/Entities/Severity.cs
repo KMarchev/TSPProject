@@ -5,7 +5,7 @@ namespace LabExp.Models.Entities;
 public class Severity
 {
     [Key]
-    public string SeverityId { get; set; } = Guid.NewGuid().ToString();
+    public Guid SeverityId { get; set; } = Guid.NewGuid();
 
     [Required(ErrorMessage ="Please give a severity level!")]
     public int SeverityLevel { get; set; }

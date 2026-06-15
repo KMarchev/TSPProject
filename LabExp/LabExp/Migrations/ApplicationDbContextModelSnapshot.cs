@@ -24,8 +24,9 @@ namespace LabExp.Migrations
 
             modelBuilder.Entity("LabExp.Models.Entities.Clearance", b =>
                 {
-                    b.Property<string>("ClearanceId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("ClearanceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("LevelName")
                         .IsRequired()
@@ -42,8 +43,9 @@ namespace LabExp.Migrations
 
             modelBuilder.Entity("LabExp.Models.Entities.Gender", b =>
                 {
-                    b.Property<string>("GenderId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("GenderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -57,15 +59,15 @@ namespace LabExp.Migrations
 
             modelBuilder.Entity("LabExp.Models.Entities.Scientist", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<string>("ClearanceId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("ClearanceId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -128,8 +130,9 @@ namespace LabExp.Migrations
 
             modelBuilder.Entity("LabExp.Models.Entities.Severity", b =>
                 {
-                    b.Property<string>("SeverityId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("SeverityId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("SeverityLevel")
                         .HasColumnType("int");
@@ -146,8 +149,9 @@ namespace LabExp.Migrations
 
             modelBuilder.Entity("LabExp.Models.Entities.Status", b =>
                 {
-                    b.Property<string>("StatusId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("StatusId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -161,24 +165,23 @@ namespace LabExp.Migrations
 
             modelBuilder.Entity("LabExp.Models.Entities.Subject", b =>
                 {
-                    b.Property<string>("SubjectId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("SubjectId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
-                    b.Property<string>("GenderId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("GenderId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("StatusId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("StatusId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("SubjectId");
 
@@ -191,16 +194,21 @@ namespace LabExp.Migrations
 
             modelBuilder.Entity("LabExp.Models.Entities.Substance", b =>
                 {
-                    b.Property<string>("SubstanceId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("SubstanceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("SeverityId")
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid>("SeverityId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("SubstanceId");
 
@@ -211,20 +219,27 @@ namespace LabExp.Migrations
 
             modelBuilder.Entity("LabExp.Models.Entities.Test", b =>
                 {
-                    b.Property<string>("TestId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("TestId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .HasMaxLength(1500)
                         .HasColumnType("nvarchar(1500)");
 
-                    b.Property<string>("SubjectId")
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("SubstanceId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("SubjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SubstanceId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("TestId");
 
@@ -235,32 +250,11 @@ namespace LabExp.Migrations
                     b.ToTable("Tests");
                 });
 
-            modelBuilder.Entity("LabExp.Models.Entities.TestScientist", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
                 {
-                    b.Property<string>("TestScientistId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ScientistId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("TestId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("TestScientistId");
-
-                    b.HasIndex("ScientistId");
-
-                    b.HasIndex("TestId");
-
-                    b.ToTable("TestScientists");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -284,7 +278,7 @@ namespace LabExp.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -298,9 +292,8 @@ namespace LabExp.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -309,7 +302,7 @@ namespace LabExp.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -323,9 +316,8 @@ namespace LabExp.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -334,7 +326,7 @@ namespace LabExp.Migrations
                     b.ToTable("AspNetUserClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -345,9 +337,8 @@ namespace LabExp.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -356,13 +347,13 @@ namespace LabExp.Migrations
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -371,10 +362,10 @@ namespace LabExp.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -388,6 +379,21 @@ namespace LabExp.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("ScientistTest", b =>
+                {
+                    b.Property<Guid>("ScientistsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TestsTestId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ScientistsId", "TestsTestId");
+
+                    b.HasIndex("TestsTestId");
+
+                    b.ToTable("ScientistTest");
                 });
 
             modelBuilder.Entity("LabExp.Models.Entities.Scientist", b =>
@@ -450,35 +456,16 @@ namespace LabExp.Migrations
                     b.Navigation("Substance");
                 });
 
-            modelBuilder.Entity("LabExp.Models.Entities.TestScientist", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("LabExp.Models.Entities.Scientist", "Scientist")
-                        .WithMany("TestScientists")
-                        .HasForeignKey("ScientistId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LabExp.Models.Entities.Test", "Test")
-                        .WithMany("TestScientists")
-                        .HasForeignKey("TestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Scientist");
-
-                    b.Navigation("Test");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.HasOne("LabExp.Models.Entities.Scientist", null)
                         .WithMany()
@@ -487,7 +474,7 @@ namespace LabExp.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.HasOne("LabExp.Models.Entities.Scientist", null)
                         .WithMany()
@@ -496,9 +483,9 @@ namespace LabExp.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -511,11 +498,26 @@ namespace LabExp.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
                     b.HasOne("LabExp.Models.Entities.Scientist", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ScientistTest", b =>
+                {
+                    b.HasOne("LabExp.Models.Entities.Scientist", null)
+                        .WithMany()
+                        .HasForeignKey("ScientistsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LabExp.Models.Entities.Test", null)
+                        .WithMany()
+                        .HasForeignKey("TestsTestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -528,11 +530,6 @@ namespace LabExp.Migrations
             modelBuilder.Entity("LabExp.Models.Entities.Gender", b =>
                 {
                     b.Navigation("Subjects");
-                });
-
-            modelBuilder.Entity("LabExp.Models.Entities.Scientist", b =>
-                {
-                    b.Navigation("TestScientists");
                 });
 
             modelBuilder.Entity("LabExp.Models.Entities.Severity", b =>
@@ -553,11 +550,6 @@ namespace LabExp.Migrations
             modelBuilder.Entity("LabExp.Models.Entities.Substance", b =>
                 {
                     b.Navigation("Tests");
-                });
-
-            modelBuilder.Entity("LabExp.Models.Entities.Test", b =>
-                {
-                    b.Navigation("TestScientists");
                 });
 #pragma warning restore 612, 618
         }

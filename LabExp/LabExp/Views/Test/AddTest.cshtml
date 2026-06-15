@@ -1,0 +1,152 @@
+﻿@{
+    ViewData["Title"] = "Add Test";
+    Layout = "";
+}
+@model LabExp.Models.TestModels.CreateTestViewModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+</head>
+
+<body class="p-4">
+
+    <div class="container">
+
+        <h2 class="mb-4">Add Test (Demo Test)</h2>
+
+        <form asp-action="AddTest" method="post">
+
+            <!-- Test name -->
+            <div class="mb-3">
+                <label class="form-label">Test Name</label>
+                <input asp-for="NameInput" class="form-control" />
+                <span asp-validation-for="NameInput" class="text-danger"></span>
+            </div>
+            
+            <!-- Subject dropdown -->
+            <div class="mb-3">
+                <label class="form-label">Subject</label>
+                <select asp-for="SubjectId"
+                        class="form-select"
+                        id="subjectSelect">
+                    @foreach (var s in Model.Subjects)
+                    {
+                        <option value="@s.SubjectId">@s.Name</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Subject Status dropdown -->
+            <div class="mb-3">
+                <label class="form-label">Subject Status</label>
+                <select asp-for="SubjectStatusId"
+                        class="form-select"
+                        id="subjectStatusSelect">
+                    @foreach (var st in Model.Statuses)
+                    {
+                        <option value="@st.StatusId">@st.Name</option>
+                    }
+
+                </select>
+            </div>
+
+            <!-- Substance dropdown -->
+            <div class="mb-3">
+                <label class="form-label">Substance</label>
+                <select asp-for="SubstanceId"
+                        class="form-select"
+                        id="substanceSelect">
+                    @foreach (var s in Model.Substances)
+                    {
+                        <option value="@s.SubstanceId">
+                            @s.Name - @(s.Severity?.SeverityName)
+                        </option>
+                    }
+
+                </select>
+            </div>
+
+            <!-- Scientists multi-select -->
+            <div class="mb-3">
+                <label class="form-label">Scientists</label>
+                <select asp-for="ScientistIds"
+                        class="form-select"
+                        id="scientistSelect"
+                        multiple>
+                    @foreach (var s in Model.Scientists)
+                    {
+                        <option value="@s.Id">@s.UserName - @s.Clearance.LevelName</option>
+                    }
+                </select>
+                <span asp-validation-for="ScientistIds" class="text-danger"></span>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-3">
+                <label class="form-label">Description</label>
+
+                <textarea asp-for="Description"
+                          class="form-control"
+                          rows="6"
+                          placeholder="Write test description here..."></textarea>
+
+            </div>
+
+            <div class="d-flex justify-content-between mt-3">
+
+                <a asp-controller="Test"
+                   asp-action="Index"
+                   class="btn btn-secondary">
+                    ← Go Back
+                </a>
+
+                <button type="submit" class="btn btn-primary">
+                    Create Test
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"></script>
+
+<!-- Modern search instead of comboboxes -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $('#scientistSelect').select2({
+            placeholder: "Search and select scientists",
+            width: '100%'
+        });
+
+        $('#substanceSelect').select2({
+            placeholder: "Search substance...",
+            width: '100%'
+        });
+
+        $('#subjectStatusSelect').select2({
+            placeholder: "Select a status...",
+            width: '100%'
+        });
+
+        $('#subjectSelect').select2({
+            placeholder: "Search subject...",
+            width: '100%'
+        });
+
+    });
+</script>
+</html>

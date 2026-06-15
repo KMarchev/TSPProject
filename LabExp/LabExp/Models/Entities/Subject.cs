@@ -6,7 +6,7 @@ namespace LabExp.Models.Entities;
 public class Subject
 {
     [Key]
-    public string SubjectId { get; set; } = Guid.NewGuid().ToString();
+    public Guid SubjectId { get; set; } = Guid.NewGuid();
 
     [Required(ErrorMessage = "Please give name of subject!")]
     [MaxLength(100,ErrorMessage ="Max length of name is 100 characters!")]
@@ -16,10 +16,10 @@ public class Subject
     public int Age { get; set; }
 
     [Required(ErrorMessage ="Please select a status!")]
-    public string? StatusId { get; set; }
+    public Guid StatusId { get; set; }
 
     [Required(ErrorMessage = "Please select a gender!")]
-    public string? GenderId { get; set; }
+    public Guid GenderId { get; set; }
 
     public Status? Status { get; set; }
 

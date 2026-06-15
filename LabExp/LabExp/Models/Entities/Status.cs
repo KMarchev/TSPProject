@@ -5,7 +5,7 @@ namespace LabExp.Models.Entities;
 public class Status
 {
     [Key]
-    public string StatusId { get; set; } = Guid.NewGuid().ToString();
+    public Guid StatusId { get; set; } = Guid.NewGuid();
 
     [Required(ErrorMessage ="Please give status name!")]
     [MaxLength(50)]

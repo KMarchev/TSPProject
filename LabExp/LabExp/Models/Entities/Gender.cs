@@ -4,7 +4,7 @@ namespace LabExp.Models.Entities;
 public class Gender
 {
     [Key]
-    public string GenderId { get; set; } = Guid.NewGuid().ToString();
+    public Guid GenderId { get; set; } = Guid.NewGuid();
 
     [Required]
     [MaxLength(50)]

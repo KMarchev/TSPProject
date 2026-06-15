@@ -5,7 +5,7 @@ namespace LabExp.Models.Entities;
 public class Clearance
 {
     [Key]
-    public string ClearanceId { get; set; } = Guid.NewGuid().ToString();
+    public Guid ClearanceId { get; set; } = Guid.NewGuid();
 
     public int LevelPriority { get; set; }
 

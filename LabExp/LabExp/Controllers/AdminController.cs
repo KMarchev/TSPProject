@@ -1,6 +1,8 @@
-﻿using LabExp.Models.Entities;
+﻿using LabExp.Data;
+using LabExp.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace LabExp.Controllers
 {
@@ -8,10 +10,12 @@ namespace LabExp.Controllers
     public class AdminController : Controller
     {
         private readonly UserManager<Scientist> _userManager;
+        private readonly ApplicationDbContext _context;
 
-        public AdminController(UserManager<Scientist> userManager)
+        public AdminController(UserManager<Scientist> userManager, ApplicationDbContext context)
         {
             _userManager = userManager;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -24,13 +28,20 @@ namespace LabExp.Controllers
             string email,
             string password,
             string role,
-            string clearanceId)
+            string clearanceName)
         {
             var existing = await _userManager.FindByEmailAsync(email);
 
             if (existing != null)
+                Console.WriteLine("Scientist already exists!");
+                return RedirectToAction("Index");
+
+            var clearance = await _context.Clearances
+                .FirstOrDefaultAsync(c => c.LevelName == clearanceName);
+
+            if (clearance == null)
             {
-                Console.WriteLine("Email already exists: " + email);
+                Console.WriteLine("Clearance not found: " + clearanceName);
                 return RedirectToAction("Index");
             }
 
@@ -38,7 +49,8 @@ namespace LabExp.Controllers
             {
                 UserName = userName,
                 Email = email,
-                ClearanceId = clearanceId
+                EmailConfirmed = true,
+                ClearanceId = clearance.ClearanceId
             };
 
             var result = await _userManager.CreateAsync(scientist, password);
@@ -46,7 +58,6 @@ namespace LabExp.Controllers
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(scientist, role);
-                Console.WriteLine("Created successfully");
             }
             else
             {
@@ -57,34 +68,37 @@ namespace LabExp.Controllers
             return RedirectToAction("Index");
         }
 
-        public Task<IActionResult> CreateAdminScientist()
+        public async Task<IActionResult> CreateAdminScientist()
         {
-            return CreateScientistUser(
+            return await CreateScientistUser(
                 "K",
                 "K123456789@secretcorp.com",
                 "StrongPassword123",
                 "Admin",
-                "865E2C76-B415-4387-ACAA-6514A4023BF6");
+                "Lead Research Scientist"
+            );
         }
 
-        public Task<IActionResult> CreateLevelOneScientistOne()
+        public async Task<IActionResult> CreateLevelOneScientistOne()
         {
-            return CreateScientistUser(
+            return await CreateScientistUser(
                 "SM",
                 "SM123456789@secretcorp.com",
                 "Sm123123",
                 "Scientist",
-                "76B2B72E-9967-4768-9C7C-E77B3F18002E");
+                "Junior Scientist"
+            );
         }
 
-        public Task<IActionResult> CreateLevelOneScientistTwo()
+        public async Task<IActionResult> CreateLevelOneScientistTwo()
         {
-            return CreateScientistUser(
+            return await CreateScientistUser(
                 "AG",
                 "AG123456789@secretcorp.com",
                 "Ag123123",
                 "Scientist",
-                "76B2B72E-9967-4768-9C7C-E77B3F18002E");
+                "Junior Scientist"
+            );
         }
 
         public IActionResult GoBack()

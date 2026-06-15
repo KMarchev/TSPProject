@@ -1,5 +1,5 @@
-﻿using LabExp.Models.Entities;
-using LabExp.Models.OtherModels;
+﻿using LabExp.Models.AccountModels;
+using LabExp.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,32 +24,26 @@ namespace LabExp.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginModel model)
         {
-            Console.WriteLine("STEP 1");
-
             var user = await _userManager.FindByEmailAsync(model.Email);
-
-            Console.WriteLine("STEP 2");
 
             if (user == null)
             {
+                ModelState.AddModelError(nameof(model.Email), "No account exists with this email.");
                 return View(model);
             }
-
-            Console.WriteLine("STEP 3");
 
             var result = await _signInManager.CheckPasswordSignInAsync(
                 user,
                 model.Password,
                 false);
 
-            Console.WriteLine("STEP 4");
-            Console.WriteLine(result.ToString());
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 return RedirectToAction("Index", "Home");
             }
 
+            ModelState.AddModelError(nameof(model.Password), "Incorrect password.");
             return View(model);
         }
 

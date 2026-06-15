@@ -2,7 +2,7 @@
     ViewData["Title"] = "Login";
     Layout = "";
 }
-@model LabExp.Models.OtherModels.LoginModel
+@model LabExp.Models.AccountModels.LoginModel
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,6 +34,10 @@
 
             .form-group {
                 margin-bottom: 15px;
+            }
+
+            .form-group span{
+                color:red;
             }
 
             .form-control {
@@ -72,6 +76,8 @@
                        placeholder="Email"
                        required
                        asp-for="Email"/>
+
+                <span asp-validation-for="Email" class="text-danger"></span>
             </div>
 
             <div class="form-group">
@@ -81,6 +87,8 @@
                        placeholder="Password"
                        required 
                        asp-for="Password"/>
+
+                <span asp-validation-for="Password" class="text-danger"></span>
             </div>
 
             <button type="submit" class="btn-login">

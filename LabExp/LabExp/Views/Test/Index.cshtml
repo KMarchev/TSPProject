@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Tests";
+}
+@model List<LabExp.Models.TestModels.TestModel>
+
+<div class="container mt-4">
+
+    <h2>Tests</h2>
+
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-controller="Test"
+           asp-action="AddTest"
+           class="btn btn-success mb-3">
+            Add Test (Admin Only)
+        </a>
+    }
+
+    @if (!Model.Any())
+    {
+        <p>No tests available.</p>
+    }
+
+    @foreach (var test in Model)
+    {
+
+        <div class="card mb-2">
+            <div class="card-body">
+                <h5>@test.Name</h5>
+                <p>@test.Subject</p>
+                <p>@test.Substance</p>
+            </div>
+        </div>
+    }
+</div>

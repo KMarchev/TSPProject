@@ -13,7 +13,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
     sqlOptions => sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), null)
     ));
 
-builder.Services.AddIdentity<Scientist, IdentityRole>(options =>
+
+
+builder.Services.AddIdentity<Scientist, IdentityRole<Guid>>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireNonAlphanumeric = false;
@@ -58,7 +60,7 @@ app.MapControllerRoute(
 
 using (var scope = app.Services.CreateScope())
 {
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 
     string[] roles = { "Admin", "Scientist" };
 
@@ -66,9 +68,11 @@ using (var scope = app.Services.CreateScope())
     {
         if (!await roleManager.RoleExistsAsync(role))
         {
-            await roleManager.CreateAsync(new IdentityRole(role));
+            await roleManager.CreateAsync(new IdentityRole<Guid>(role));
         }
     }
 }
+
+await DbSeeder.SeedAdminAsync(app.Services);
 
 app.Run();
