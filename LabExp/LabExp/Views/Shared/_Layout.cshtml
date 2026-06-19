@@ -29,6 +29,14 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Test" asp-action="Index">Test</a>
                         </li>
+                        @if (int.Parse(User.FindFirst("ClearanceLevel")?.Value ?? "0")>=2)
+                        {
+                            <a class="nav-link text-dark " asp-area="" asp-controller="Subject" asp-action="Subjects">Subjects</a>
+                        }
+                        @if (int.Parse(User.FindFirst("ClearanceLevel")?.Value ?? "0") >= 2)
+                        {
+                            <a class="nav-link text-dark " asp-area="" asp-controller="Substance" asp-action="Substances">Substances</a>
+                        }
                         @if (User.IsInRole("Admin"))
                         {
                             <a class="nav-link text-dark " asp-area="" asp-controller="Admin" asp-action="Index">Admin Menu</a>

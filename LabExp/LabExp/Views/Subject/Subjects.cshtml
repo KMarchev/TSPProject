@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Subjects";
+}
+@model List<LabExp.Models.SubjectModels.SubjectModel>
+
+<div class="container mt-4">
+
+    <h2>Subjects</h2>
+
+    @if (!Model.Any())
+    {
+        <p>No subjects available.</p>
+    }
+
+    @foreach (var subject in Model)
+    {
+        <div class="card mb-2">
+            <div class="card-body">
+
+                <h5>@subject.Name</h5>
+
+                <p><strong>Age:</strong> @subject.Age</p>
+                <p><strong>Status:</strong> @subject.Status</p>
+                <p><strong>Gender:</strong> @subject.Gender</p>
+
+            </div>
+        </div>
+    }
+
+</div>

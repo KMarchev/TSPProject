@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Substances";
+}
+@model List<LabExp.Models.SubstanceModels.SubstanceModel>
+
+<div class="container mt-4">
+
+    <h2>Substances</h2>
+
+    @if (!Model.Any())
+    {
+        <p>No substances available.</p>
+    }
+
+    @foreach (var substance in Model)
+    {
+        <div class="card mb-2">
+            <div class="card-body">
+
+                <h5>@substance.Name</h5>
+
+                <p>
+                    <strong>Severity:</strong>
+                    @substance.Severity
+                </p>
+
+                <p>@substance.Description</p>
+
+            </div>
+        </div>
+    }
+
+</div>

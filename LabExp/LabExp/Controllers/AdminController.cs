@@ -33,8 +33,11 @@ namespace LabExp.Controllers
             var existing = await _userManager.FindByEmailAsync(email);
 
             if (existing != null)
+            {
                 Console.WriteLine("Scientist already exists!");
                 return RedirectToAction("Index");
+            }
+
 
             var clearance = await _context.Clearances
                 .FirstOrDefaultAsync(c => c.LevelName == clearanceName);
@@ -97,7 +100,7 @@ namespace LabExp.Controllers
                 "AG123456789@secretcorp.com",
                 "Ag123123",
                 "Scientist",
-                "Junior Scientist"
+                "Scientist"
             );
         }
 

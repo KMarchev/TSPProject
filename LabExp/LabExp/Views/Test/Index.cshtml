@@ -26,9 +26,16 @@
 
         <div class="card mb-2">
             <div class="card-body">
-                <h5>@test.Name</h5>
+                <h5>Test#@test.Number - @test.Name</h5>
                 <p>@test.Subject</p>
                 <p>@test.Substance</p>
+
+                <a asp-controller="Test"
+                   asp-action="Details"
+                   asp-route-id="@test.Id"
+                   class="btn btn-dark">
+                    View Test
+                </a>
             </div>
         </div>
     }

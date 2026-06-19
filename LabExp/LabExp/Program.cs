@@ -34,6 +34,44 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.IsEssential = true;
 });
 
+builder.Services.AddControllersWithViews(options =>
+{
+    var policy = new Microsoft.AspNetCore.Authorization.AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+
+    options.Filters.Add(new Microsoft.AspNetCore.Mvc.Authorization.AuthorizeFilter(policy));
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Level1",
+        policy => policy.RequireAssertion(context =>
+        {
+            var user = context.User;
+
+            var level = user.FindFirst("ClearanceLevel")?.Value;
+
+            return int.TryParse(level, out int l) && l >= 1;
+        }));
+
+    options.AddPolicy("Level2",
+        policy => policy.RequireAssertion(context =>
+        {
+            var level = context.User.FindFirst("ClearanceLevel")?.Value;
+
+            return int.TryParse(level, out int l) && l >= 2;
+        }));
+
+    options.AddPolicy("Level10",
+        policy => policy.RequireAssertion(context =>
+        {
+            var level = context.User.FindFirst("ClearanceLevel")?.Value;
+
+            return int.TryParse(level, out int l) && l >= 10;
+        }));
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

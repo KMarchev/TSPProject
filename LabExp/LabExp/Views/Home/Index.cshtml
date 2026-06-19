@@ -2,7 +2,59 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome, @User.Identity.Name</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="secretcorp-document mt-4">
+
+    <div class="secretcorp-header">
+        <h1>SECRET CORP TERMINAL ACCESS</h1>
+        <div class="secretcorp-title">WELCOME, @User.Identity.Name</div>
+        <div class="secretcorp-title">
+            @(User.FindFirst("ClearanceName")?.Value ?? "Unknown")
+        </div>
+    </div>
+
+    <div class="secretcorp-section">
+        <p>
+            <span class="secretcorp-label">STATUS:</span>
+            AUTHENTICATED
+        </p>
+
+        <p>
+            <span class="secretcorp-label">CLEARANCE CHECK:</span>
+            VERIFIED SESSION ACTIVE
+        </p>
+
+        <p>
+            <span class="secretcorp-label">SYSTEM TIME:</span>
+            @DateTime.Now
+        </p>
+    </div>
+
+    <div class="secretcorp-section">
+        <p>
+            You have successfully accessed the SecretCorp internal laboratory network.
+            All interactions within this system are monitored and recorded for compliance and research integrity.
+        </p>
+
+        <p>
+            This terminal provides access to controlled experimental records, subject data logs,
+            and chemical substance documentation classified under internal research protocols.
+        </p>
+    </div>
+
+    <div class="secretcorp-section">
+        <p class="secretcorp-label">AVAILABLE MODULES</p>
+
+        <ul>
+            <li>Test Registry — experimental logs and results</li>
+            <li>Subject Database — monitored personnel records</li>
+            <li>Substance Archive — classified chemical data</li>
+        </ul>
+    </div>
+
+    <div class="secretcorp-section">
+        <p>
+            Unauthorized access attempts are automatically flagged and may result in access restriction or clearance review.
+        </p>
+    </div>
+
 </div>

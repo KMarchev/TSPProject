@@ -1,0 +1,282 @@
+﻿@{
+    ViewData["Title"] = Model.Name;
+    Layout = "";
+}
+@model LabExp.Models.TestModels.TestDetailsViewModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+
+    <title>@Model.Name</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+
+    <style>
+            body {
+                background-color: black;
+                color: #111;
+                font-family: Georgia, serif;
+                padding: 40px;
+            }
+
+            .secretcorp-document {
+                max-width: 1000px;
+                margin: auto;
+                background: white;
+                border: 3px solid gray;
+                box-shadow: 0 0 15px rgba(0,0,0,0.15);
+                padding: 40px;
+            }
+
+            .secretcorp-header {
+                text-align: center;
+                border-bottom: 4px solid #000;
+                margin-bottom: 30px;
+                padding-bottom: 20px;
+            }
+
+            .secretcorp-company {
+                font-size: 3rem;
+                font-weight: bold;
+                letter-spacing: 4px;
+            }
+
+            .secretcorp-division {
+                font-size: 1rem;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                margin-bottom: 10px;
+            }
+
+            .classification-box {
+                display: inline-block;
+                background: #111;
+                color: white;
+                padding: 10px 25px;
+                font-weight: bold;
+                letter-spacing: 2px;
+                margin-top: 10px;
+            }
+
+            .secretcorp-title {
+                margin-top: 20px;
+                font-size: 2rem;
+                font-weight: bold;
+            }
+
+            .secretcorp-section {
+                margin-top: 30px;
+            }
+
+                .secretcorp-section h3 {
+                    border-bottom: 2px solid #000;
+                    padding-bottom: 5px;
+                    margin-bottom: 15px;
+                    text-transform: uppercase;
+                }
+
+            .secretcorp-label {
+                font-weight: bold;
+                text-transform: uppercase;
+            }
+
+            .info-grid {
+                display: grid;
+                grid-template-columns: 250px auto;
+                gap: 10px;
+                margin-bottom: 10px;
+            }
+
+            .description-box {
+                border-left: 5px solid #000;
+                padding: 15px;
+                background-color: #f8f8f8;
+                white-space: pre-wrap;
+            }
+
+            .scientist-list li {
+                margin-bottom: 5px;
+            }
+
+            .footer-note {
+                margin-top: 40px;
+                padding-top: 15px;
+                border-top: 2px solid #000;
+                font-size: 0.9rem;
+                color: #555;
+                text-align: center;
+            }
+
+            .btn-secretcorp {
+                background-color: #111;
+                color: white;
+                border: none;
+            }
+
+                .btn-secretcorp:hover {
+                    background-color: #333;
+                    color: white;
+                }
+
+            .status-badge {
+                display: inline-block;
+                padding: 5px 15px;
+                border-radius: 4px;
+                color: white;
+                font-weight: bold;
+            }
+
+            .status-green {
+                background: #198754;
+            }
+
+            .status-blue {
+                background: #0d6efd;
+            }
+
+            .status-orange {
+                background: #fd7e14;
+            }
+
+            .status-yellow {
+                background: #fdff91;
+            }
+
+            .status-red {
+                background: #dc3545;
+            }
+
+            .status-black {
+                background: #111;
+            }
+
+            .status-gray {
+                background: #6c757d;
+            }
+    </style>
+</head>
+
+<body>
+
+    <div class="secretcorp-document">
+
+        <div class="secretcorp-header">
+
+            <div class="secretcorp-company">
+                SECRETCORP
+            </div>
+
+            <div class="secretcorp-division">
+                Advanced Research Division
+            </div>
+
+            <div class="classification-box">
+                INTERNAL DOCUMENTATION
+            </div>
+
+            <div class="secretcorp-title">
+                @Model.Name
+            </div>
+
+        </div>
+
+        <div class="secretcorp-section">
+
+            <h3>Case Information</h3>
+
+            <div class="info-grid">
+                <div class="secretcorp-label">Case File</div>
+                <div>SC-@Model.Number.ToString("D4")</div>
+            </div>
+
+            <div class="info-grid">
+                <div class="secretcorp-label">Test Number</div>
+                <div>@Model.Number</div>
+            </div>
+
+            <div class="info-grid">
+                <div class="secretcorp-label">Test Subject</div>
+                <div>@Model.Subject</div>
+            </div>
+
+            <div class="info-grid">
+                <div class="secretcorp-label">Subject Status</div>
+                <div>
+                    @{
+                        string statusClass = Model.Status switch
+                        {
+                            "Stable" => "status-green",
+                            "Alive" => "status-blue",
+                            "Critical" => "status-orange",
+                            "Deceased" => "status-red",
+                            "Unknown" => "status-black",
+                            "Pending" =>"status-yellow",
+                            _ => "status-gray"
+                        };
+                    }
+
+                    <span class="status-badge @statusClass">
+                        @Model.Status
+                    </span>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="secretcorp-label">Experimental Compound</div>
+                <div>@Model.Substance</div>
+            </div>
+
+        </div>
+
+        <div class="secretcorp-section">
+
+            <h3>Experiment Summary</h3>
+
+            <div class="description-box">
+                @(string.IsNullOrWhiteSpace(Model.Description)
+                    ? "No experiment summary has been recorded."
+                    : Model.Description)
+            </div>
+
+        </div>
+
+        <div class="secretcorp-section">
+
+            <h3>Research Personnel</h3>
+
+            @if (Model.Scientists.Any())
+            {
+                <ul class="scientist-list">
+                    @foreach (var scientist in Model.Scientists)
+                    {
+                        <li>@scientist</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>No scientists assigned.</p>
+            }
+
+        </div>
+
+        <div class="secretcorp-section">
+
+            <a asp-action="Index"
+               class="btn btn-secretcorp">
+                ← Return to Test List
+            </a>
+
+        </div>
+
+        <div class="footer-note">
+            SecretCorp Research Division • Confidential Internal Record • Unauthorized distribution prohibited
+        </div>
+
+    </div>
+
+</body>
+</html>

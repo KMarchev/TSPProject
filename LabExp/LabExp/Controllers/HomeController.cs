@@ -20,6 +20,8 @@ namespace LabExp.Controllers
         public IActionResult Index()
         {
             if (!_signInManager.IsSignedIn(User)) return RedirectToAction("Login", "Account");
+            Console.WriteLine(User.FindFirst("ClearanceLevel")?.Value ?? "0");
+
             return View();
         }
 

@@ -29,7 +29,6 @@ namespace LabExp.Controllers
                 .Include(t => t.Scientists)
                 .AsQueryable();
 
-            // If NOT admin → filter by membership
             if (!User.IsInRole("Admin"))
             {
                 query = query.Where(t => t.Scientists.Any(s => s.Id == userId));
@@ -116,7 +115,7 @@ namespace LabExp.Controllers
             var test = new Test
             {
                 TestId = Guid.NewGuid(),
-                Name = $"Test#{nextNumber} - {model.NameInput}",
+                Name = model.NameInput,
                 Number = nextNumber,
                 Description = model.Description,
                 SubjectId = subject!.SubjectId,
@@ -132,9 +131,65 @@ namespace LabExp.Controllers
 
             subject!.StatusId = model.SubjectStatusId;
 
-            _context.SaveChanges();
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                throw;
+            }
 
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        public IActionResult Details(Guid id)
+        {
+            var test = _context.Tests
+                .Include(t => t.Subject)
+                    .ThenInclude(s => s.Status)
+                .Include(t => t.Substance)
+                .Include(t => t.Scientists)
+                .FirstOrDefault(t => t.TestId == id);
+
+            if (test == null)
+            {
+                return NotFound();
+            }
+
+            if (!User.IsInRole("Admin"))
+            {
+                var userId = Guid.Parse(_userManager.GetUserId(User)!);
+
+                bool assignedToTest = test.Scientists
+                    .Any(s => s.Id == userId);
+
+                if (!assignedToTest)
+                {
+                    return Forbid();
+                }
+            }
+
+            var clearanceLevel = int.Parse(User.FindFirst("ClearanceLevel")?.Value ?? "0");
+
+            var model = new TestDetailsViewModel
+            {
+                Id = test.TestId,
+                Number = test.Number,
+                Name = clearanceLevel>=2 ? test.Name : "[REDACTED]",
+                Description = test.Description,
+                Subject = clearanceLevel >= 2 ? test.Subject!.Name : "[REDACTED]",
+                Substance = clearanceLevel >= 2 ? test.Substance!.Name : "████████████",
+                Status = clearanceLevel >= 2 ? test.Subject.Status!.Name : "Unknown",
+                Scientists = test.Scientists
+                    .Select(s => clearanceLevel >= 2 ? s.UserName! : "[REDACTED]")
+                    .ToList()
+            };
+
+            return View(model);
+        }
+
     }
 }
