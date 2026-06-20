@@ -35,9 +35,6 @@ namespace LabExp.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginModel model)
         {
-            if (!ModelState.IsValid)
-                return View(model);
-
             var user = await _context.Scientists
                 .Include(u => u.Clearance)
                 .FirstOrDefaultAsync(u => u.Email == model.Email);

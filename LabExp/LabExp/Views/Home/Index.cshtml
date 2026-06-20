@@ -46,8 +46,11 @@
 
         <ul>
             <li>Test Registry — experimental logs and results</li>
-            <li>Subject Database — monitored personnel records</li>
-            <li>Substance Archive — classified chemical data</li>
+            @if(int.Parse(User.FindFirst("ClearanceLevel")?.Value ?? "0") >= 2)
+            {
+                <li>Subject Database — monitored personnel records</li>
+                <li>Substance Archive — classified chemical data</li>
+            }
         </ul>
     </div>
 

@@ -149,8 +149,9 @@ namespace LabExp.Controllers
         {
             var test = _context.Tests
                 .Include(t => t.Subject)
-                    .ThenInclude(s => s.Status)
+                .ThenInclude(s => s.Status)
                 .Include(t => t.Substance)
+                .ThenInclude(s=>s.Severity)
                 .Include(t => t.Scientists)
                 .FirstOrDefault(t => t.TestId == id);
 
@@ -181,7 +182,7 @@ namespace LabExp.Controllers
                 Name = clearanceLevel>=2 ? test.Name : "[REDACTED]",
                 Description = test.Description,
                 Subject = clearanceLevel >= 2 ? test.Subject!.Name : "[REDACTED]",
-                Substance = clearanceLevel >= 2 ? test.Substance!.Name : "████████████",
+                Substance = clearanceLevel >= 2 ? test.Substance!.Name +" - "+ test.Substance!.Severity!.SeverityName : "████████████",
                 Status = clearanceLevel >= 2 ? test.Subject.Status!.Name : "Unknown",
                 Scientists = test.Scientists
                     .Select(s => clearanceLevel >= 2 ? s.UserName! : "[REDACTED]")
