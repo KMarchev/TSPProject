@@ -20,6 +20,7 @@ namespace LabExp.Models.TestModels
         [Required(ErrorMessage = "Select at least one scientist")]
         public List<Guid> ScientistIds { get; set; } = new();
 
+        [MaxLength(3000,ErrorMessage = "Cannot be more that 3000 characters!")]
         public string? Description { get; set; }
 
         public List<Subject> Subjects { get; set; } = new();

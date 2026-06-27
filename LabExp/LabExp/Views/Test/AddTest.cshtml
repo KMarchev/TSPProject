@@ -94,7 +94,10 @@
                 <textarea asp-for="Description"
                           class="form-control"
                           rows="6"
-                          placeholder="Write test description here..."></textarea>
+                          placeholder="Write test description here..."
+                          data-val="true"></textarea>
+
+                <span asp-validation-for="Description" class="text-danger"></span>
 
             </div>
 

@@ -1,18 +1,19 @@
 ﻿@{
     ViewData["Title"] = "Tests";
 }
+
 @model List<LabExp.Models.TestModels.TestModel>
 
 <div class="container mt-4">
-
     <h2>Tests</h2>
-
     @if (User.IsInRole("Admin"))
     {
         <a asp-controller="Test"
            asp-action="AddTest"
            class="btn btn-success mb-3">
+
             Add Test (Admin Only)
+
         </a>
     }
 
@@ -23,19 +24,50 @@
 
     @foreach (var test in Model)
     {
-
         <div class="card mb-2">
             <div class="card-body">
-                <h5>Test#@test.Number - @test.Name</h5>
-                <p>@test.Subject</p>
-                <p>@test.Substance</p>
+                <h5>
+                    Test#@test.Number - @test.Name
+                </h5>
+                <p>
+                    @test.Subject
+                </p>
 
-                <a asp-controller="Test"
-                   asp-action="Details"
-                   asp-route-id="@test.Id"
-                   class="btn btn-dark">
-                    View Test
-                </a>
+
+                <p>
+                    @test.Substance
+                </p>
+
+                <div class="d-flex gap-2">
+
+                    <a asp-controller="Test"
+                       asp-action="Details"
+                       asp-route-id="@test.Id"
+                       class="btn btn-dark">
+
+                        View Test
+
+                    </a>
+                    @if (User.IsInRole("Admin"))
+                    {
+
+                        <form asp-controller="Test"
+                              asp-action="Delete"
+                              method="post"
+                              onsubmit="return confirm('Are you sure you want to delete Test #@test.Number?');">
+
+                            <input type="hidden"
+                                   name="id"
+                                   value="@test.Id" />
+
+                            <button type="submit"
+                                    class="btn btn-danger">
+
+                                Delete
+                            </button>
+                        </form>
+                    }
+                </div>
             </div>
         </div>
     }

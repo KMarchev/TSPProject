@@ -91,9 +91,23 @@ namespace LabExp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.Subjects = _context.Subjects.ToList();
-                model.Substances = _context.Substances.ToList();
-                model.Scientists = _context.Scientists.ToList();
+                model.Subjects = _context.Subjects
+                    .OrderBy(s => s.Name)
+                    .ToList();
+
+                model.Substances = _context.Substances
+                    .Include(s => s.Severity)
+                    .OrderBy(s => s.Name)
+                    .ToList();
+
+                model.Scientists = _context.Scientists
+                    .Include(s => s.Clearance)
+                    .OrderBy(s => s.UserName)
+                    .ToList();
+
+                model.Statuses = _context.Statuses
+                    .OrderBy(s => s.Name)
+                    .ToList();
 
                 return View(model);
             }
@@ -190,6 +204,42 @@ namespace LabExp.Controllers
             };
 
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var test = await _context.Tests
+                .FirstOrDefaultAsync(x => x.TestId == id);
+
+            if (test == null)
+                return NotFound();
+
+
+            int deletedNumber = test.Number;
+
+
+            _context.Tests.Remove(test);
+
+
+
+            var testsAbove = await _context.Tests
+                .Where(x => x.Number > deletedNumber)
+                .ToListAsync();
+
+
+
+            foreach (var t in testsAbove)
+            {
+                t.Number--;
+            }
+
+
+
+            await _context.SaveChangesAsync();
+
+
+            return RedirectToAction(nameof(Index));
         }
 
     }
