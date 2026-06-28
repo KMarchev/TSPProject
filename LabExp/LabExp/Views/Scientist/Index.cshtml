@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Scientists";
+}
+
+@model List<LabExp.Models.ScientistModels.ScientistModel>
+
+<div class="container mt-4">
+    <h2>Scientists</h2>
+
+    @if (!Model.Any())
+    {
+        <p>No scientists available.</p>
+    }
+
+    @foreach (var scientist in Model)
+    {
+        <div class="card mb-2">
+            <div class="card-body">
+
+                <h5>@scientist.UserName</h5>
+
+                <p>Email: @scientist.Email</p>
+
+                <p>Role: @scientist.ClearanceName</p>
+            </div>
+        </div>
+    }
+</div>
