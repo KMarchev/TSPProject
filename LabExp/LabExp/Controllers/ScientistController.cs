@@ -24,6 +24,7 @@ namespace LabExp.Controllers
         {
             var model = _context.Users
                 .Include(s => s.Clearance)
+                .Where(c => c.Clearance!.LevelPriority<=1)
                 .OrderBy(s => s.UserName)
                 .Select(s => new ScientistModel
                 {
@@ -37,6 +38,41 @@ namespace LabExp.Controllers
                 .ToList();
 
             return View(model);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var scientist = await _context.Users
+                .FirstOrDefaultAsync(s => s.Id == id);
+
+            if (scientist == null)
+            {
+                return NotFound();
+            }
+
+            var tests = await _context.Tests
+                .Where(t => t.Scientists.Any(s => s.Id == id))
+                .OrderBy(t=>t.Number)
+                .ToListAsync();
+
+            if (tests.Any())
+            {
+                TempData["DeleteError"] =
+                    $"<strong>Cannot delete {scientist.UserName}.</strong><br/>" +
+                    "The scientist is assigned to:" +
+                    "<ul>" +
+                    string.Join("", tests.Select(t =>
+                        $"<li>Test #{t.Number} - {t.Name}</li>")) +
+                    "</ul>";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            await _userManager.DeleteAsync(scientist);
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

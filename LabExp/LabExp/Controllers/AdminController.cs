@@ -74,11 +74,11 @@ namespace LabExp.Controllers
         public async Task<IActionResult> CreateAdminScientist()
         {
             return await CreateScientistUser(
-                "K",
-                "K123456789@secretcorp.com",
-                "StrongPassword123",
-                "Admin",
-                "Lead Research Scientist"
+                "Ta4",
+                "Ta4@secretcorp.com",
+                "Ta4123123",
+                "Scientist",
+                "Junior Scientist"
             );
         }
 

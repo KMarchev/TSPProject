@@ -54,15 +54,17 @@
                         <form asp-controller="Test"
                               asp-action="Delete"
                               method="post"
-                              onsubmit="return confirm('Are you sure you want to delete Test #@test.Number?');">
+                              id="deleteForm-@test.Id">
 
                             <input type="hidden"
                                    name="id"
                                    value="@test.Id" />
 
-                            <button type="submit"
-                                    class="btn btn-danger">
-
+                            <button type="button"
+                                    class="btn btn-danger"
+                                    onclick="showDeleteModal(
+                                'deleteForm-@test.Id',
+                                'Delete Test #@test.Number?')">
                                 Delete
                             </button>
                         </form>
@@ -72,3 +74,5 @@
         </div>
     }
 </div>
+
+<partial name="_ConfirmDeleteModal" />
