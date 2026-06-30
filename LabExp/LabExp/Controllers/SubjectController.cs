@@ -40,5 +40,40 @@ namespace LabExp.Controllers
 
             return View(model);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var subject = await _context.Subjects
+                .FirstOrDefaultAsync(s => s.SubjectId == id);
+
+            if (subject == null)
+            {
+                return NotFound();
+            }
+
+            var tests = await _context.Tests
+                .Where(t => t.SubjectId == id)
+                .OrderBy(t => t.Number)
+                .ToListAsync();
+
+            if (tests.Any())
+            {
+                TempData["DeleteError"] =
+                    $"<strong>Cannot delete {subject.Name}.</strong><br/>" +
+                    "The subject is assigned to:" +
+                    "<ul>" +
+                    string.Join("", tests.Select(t =>
+                        $"<li>Test #{t.Number} - {t.Name}</li>")) +
+                    "</ul>";
+
+                return RedirectToAction(nameof(Subjects));
+            }
+
+            _context.Subjects.Remove(subject);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Subjects));
+        }
     }
 }

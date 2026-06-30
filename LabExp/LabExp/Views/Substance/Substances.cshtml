@@ -1,7 +1,45 @@
 ﻿@{
     ViewData["Title"] = "Substances";
 }
+
 @model List<LabExp.Models.SubstanceModels.SubstanceModel>
+
+@if (TempData["DeleteError"] != null)
+{
+    <div class="modal fade" id="deleteErrorModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Cannot Delete Substance</h5>
+                    <button type="button"
+                            class="btn-close btn-close-white"
+                            data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    @Html.Raw(TempData["DeleteError"])
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        OK
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener("load", function () {
+            var modal = new bootstrap.Modal(document.getElementById("deleteErrorModal"));
+            modal.show();
+        });
+    </script>
+}
 
 <div class="container mt-4">
 
@@ -26,8 +64,35 @@
 
                 <p>@substance.Description</p>
 
+                <div class="d-flex gap-2">
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <form asp-controller="Substance"
+                              asp-action="Delete"
+                              method="post"
+                              id="deleteForm-@substance.Id">
+
+                            <input type="hidden"
+                                   name="id"
+                                   value="@substance.Id" />
+
+                            <button type="button"
+                                    class="btn btn-danger"
+                                    onclick="showDeleteModal(
+                                'deleteForm-@substance.Id',
+                                'Delete @substance.Name?')">
+                                Delete
+                            </button>
+                        </form>
+                    }
+
+                </div>
+
             </div>
         </div>
     }
 
 </div>
+
+<partial name="_ConfirmDeleteModal" />
