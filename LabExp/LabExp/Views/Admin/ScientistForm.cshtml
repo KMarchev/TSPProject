@@ -1,0 +1,104 @@
+﻿@model LabExp.Models.ScientistModels.ScientistFormViewModel
+
+@{
+    ViewData["Title"] = Model.Id == Guid.Empty ? "Add Scientist" : "Edit Scientist";
+    Layout = "_AdminLayout";
+}
+
+<div class="container mt-4">
+
+    <h2>@ViewData["Title"]</h2>
+
+    <form asp-action="@(Model.Id == Guid.Empty ? "AddScientist" : "EditScientist")"
+          method="post">
+
+        <input asp-for="Id" type="hidden" />
+
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="mb-3">
+            <label asp-for="UserName" class="form-label"></label>
+            <input asp-for="UserName" class="form-control" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        @if (Model.Id == Guid.Empty)
+        {
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+        }
+
+        <div class="mb-3">
+            <label class="form-label">Clearance</label>
+
+            <select asp-for="ClearanceId"
+                    class="form-select"
+                    id="clearanceSelect">
+
+                @foreach (var clearance in Model.Clearances)
+                {
+                    <option value="@clearance.ClearanceId">
+                        @clearance.LevelName
+                    </option>
+                }
+
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Role</label>
+
+            <select asp-for="Role"
+                    class="form-select"
+                    id="roleSelect">
+
+                <option value="Scientist">Scientist</option>
+                <option value="Admin">Admin</option>
+
+            </select>
+        </div>
+
+        <div class="d-flex justify-content-between">
+
+            <a asp-action="ManageScientists"
+               class="btn btn-secondary">
+                Back
+            </a>
+
+            <button class="btn btn-success">
+                @(Model.Id == Guid.Empty ? "Create Scientist" : "Save Changes")
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $(function () {
+
+            $('#clearanceSelect').select2({
+                width: '100%'
+            });
+
+            $('#roleSelect').select2({
+                width: '100%'
+            });
+
+        });
+    </script>
+}

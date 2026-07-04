@@ -39,6 +39,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[F:/VS/TSPProject/TSPProject/LabExp/LabExp/Views/Admin/ManageScientists.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cTWFuYWdlU2NpZW50aXN0cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[F:/VS/TSPProject/TSPProject/LabExp/LabExp/Views/Admin/ScientistForm.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cU2NpZW50aXN0Rm9ybS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [F:/VS/TSPProject/TSPProject/LabExp/LabExp/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -53,6 +61,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [F:/VS/TSPProject/TSPProject/LabExp/LabExp/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[F:/VS/TSPProject/TSPProject/LabExp/LabExp/Views/Shared/_AdminLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BZG1pbkxheW91dC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [F:/VS/TSPProject/TSPProject/LabExp/LabExp/Views/Shared/_ConfirmDeleteModal.cshtml]

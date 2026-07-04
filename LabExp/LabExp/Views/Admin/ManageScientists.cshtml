@@ -1,0 +1,111 @@
+﻿@{
+    ViewData["Title"] = "Scientists";
+    Layout = "_AdminLayout";
+}
+
+@model List<LabExp.Models.ScientistModels.ScientistModel>
+
+@using System.Security.Claims
+
+@{
+    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
+
+@if (TempData["DeleteError"] != null)
+{
+    <div class="modal fade" id="deleteErrorModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Cannot Delete Scientist</h5>
+                    <button type="button"
+                            class="btn-close btn-close-white"
+                            data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    @Html.Raw(TempData["DeleteError"])
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        OK
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener("load", function () {
+            var modal = new bootstrap.Modal(document.getElementById("deleteErrorModal"));
+            modal.show();
+        });
+    </script>
+}
+
+<div class="container mt-4">
+    <h2>Scientists</h2>
+
+    <a asp-controller="Admin"
+       asp-action="AddScientist"
+       class="btn btn-success mb-3">
+
+        Add Scientist
+
+    </a>
+
+    @if (!Model.Any())
+    {
+        <p>No scientists available.</p>
+    }
+
+    @foreach (var scientist in Model)
+    {
+        <div class="card mb-2">
+            <div class="card-body">
+
+                <h5>@scientist.UserName</h5>
+
+                <p>Email: @scientist.Email</p>
+
+                <p>Role: @scientist.ClearanceName</p>
+
+                <div class="d-flex gap-2">
+                    @if (scientist.Id.ToString() != currentUserId)
+                    {
+                        <a asp-action="EditScientist"
+                           asp-route-id="@scientist.Id"
+                           class="btn btn-warning">
+                            Edit
+                        </a>
+
+                        <form asp-controller="Admin"
+                              asp-action="DeleteScientist"
+                              method="post"
+                              id="deleteForm-@scientist.Id">
+
+                            <input type="hidden"
+                                   name="id"
+                                   value="@scientist.Id" />
+
+                            <button type="button"
+                                    class="btn btn-danger"
+                                    onclick="showDeleteModal(
+                                'deleteForm-@scientist.Id',
+                                'Delete @scientist.UserName?')">
+                                Delete
+                            </button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<partial name="_ConfirmDeleteModal" />

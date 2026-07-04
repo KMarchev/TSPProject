@@ -1,6 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Admin Menu";
-    Layout = "";
+    Layout = "_AdminLayout";
 }
 
 <!DOCTYPE html>
@@ -56,21 +56,21 @@
         <h2>Admin Menu</h2>
 
         <a asp-controller="Admin"
-           asp-action="CreateAdminScientist"
+           asp-action="ManageScientists"
            class="menu-button">
-            Add Scientist
+            Manage Scientists
         </a>
 
         <a asp-controller="Admin"
-           asp-action="CreateLevelOneScientistOne"
+           asp-action="ManageSubstances"
            class="menu-button">
-            Add Clearance Level 1 Scientist No1
+            Manage Substances
         </a>
 
         <a asp-controller="Admin"
-           asp-action="CreateLevelOneScientistTwo"
+           asp-action="ManageSubjects"
            class="menu-button">
-            Add Clearance Level 1 Scientist No2
+            Manage Subjects
         </a>
 
         <a asp-controller="Admin"
