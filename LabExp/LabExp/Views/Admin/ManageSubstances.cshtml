@@ -1,0 +1,110 @@
+﻿@{
+    ViewData["Title"] = "Substances";
+    Layout = "_AdminLayout";
+}
+
+@model List<LabExp.Models.SubstanceModels.SubstanceModel>
+
+@if (TempData["DeleteError"] != null)
+{
+    <div class="modal fade" id="deleteErrorModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Cannot Delete Substance</h5>
+                    <button type="button"
+                            class="btn-close btn-close-white"
+                            data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    @Html.Raw(TempData["DeleteError"])
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        OK
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener("load", function () {
+            var modal = new bootstrap.Modal(document.getElementById("deleteErrorModal"));
+            modal.show();
+        });
+    </script>
+}
+
+<div class="container mt-4">
+
+    <h2>Substances</h2>
+
+    <a asp-controller="Admin"
+       asp-action="AddSubstance"
+       class="btn btn-success mb-3">
+
+        Add Substance
+
+    </a>
+
+    @if (!Model.Any())
+    {
+        <p>No substances available.</p>
+    }
+
+    @foreach (var substance in Model)
+    {
+        <div class="card mb-2">
+            <div class="card-body">
+
+                <h5>@substance.Name</h5>
+
+                <p>
+                    <strong>Severity:</strong>
+                    @substance.Severity
+                </p>
+
+                <p>@substance.Description</p>
+
+                <div class="d-flex gap-2">
+
+                    <a asp-action="EditSubstance"
+                       asp-route-id="@substance.Id"
+                       class="btn btn-warning">
+                        Edit
+                    </a>
+
+                    <form asp-controller="Admin"
+                          asp-action="DeleteSubstance"
+                          method="post"
+                          id="deleteForm-@substance.Id">
+
+                        <input type="hidden"
+                               name="id"
+                               value="@substance.Id" />
+
+                        <button type="button"
+                                class="btn btn-danger"
+                                onclick="showDeleteModal(
+                            'deleteForm-@substance.Id',
+                            'Delete @substance.Name?')">
+                            Delete
+                        </button>
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    }
+
+</div>
+
+<partial name="_ConfirmDeleteModal" />

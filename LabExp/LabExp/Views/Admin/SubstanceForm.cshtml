@@ -1,0 +1,82 @@
+﻿@model LabExp.Models.AdminModels.SubstanceFormViewModel
+
+@{
+    ViewData["Title"] = Model.SubstanceId == Guid.Empty ? "Add Substance" : "Edit Substance";
+    Layout = "_AdminLayout";
+}
+
+<div class="container mt-4">
+
+    <h2>@ViewData["Title"]</h2>
+
+    <form asp-action="@(Model.SubstanceId == Guid.Empty ? "AddSubstance" : "EditSubstance")"
+          method="post">
+
+        <input asp-for="SubstanceId" type="hidden" />
+
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label"></label>
+            <textarea asp-for="Description"
+                      class="form-control"
+                      rows="4"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Severity</label>
+
+            <select asp-for="SeverityId"
+                    class="form-select"
+                    id="severitySelect">
+
+                @foreach (var severity in Model.Severities)
+                {
+                    <option value="@severity.SeverityId">
+                        @severity.SeverityName
+                    </option>
+                }
+
+            </select>
+
+            <span asp-validation-for="SeverityId" class="text-danger"></span>
+        </div>
+
+        <div class="d-flex justify-content-between">
+
+            <a asp-action="ManageSubstances"
+               class="btn btn-secondary">
+                Back
+            </a>
+
+            <button type="submit" class="btn btn-success">
+                @(Model.SubstanceId == Guid.Empty ? "Create Substance" : "Save Changes")
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $(function () {
+
+            $('#severitySelect').select2({
+                width: '100%'
+            });
+
+        });
+    </script>
+}

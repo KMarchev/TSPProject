@@ -1,6 +1,8 @@
 ﻿using LabExp.Data;
+using LabExp.Models.AdminModels;
 using LabExp.Models.Entities;
 using LabExp.Models.ScientistModels;
+using LabExp.Models.SubstanceModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -282,6 +284,149 @@ namespace LabExp.Controllers
             }
 
             return RedirectToAction(nameof(ManageScientists));
+        }
+
+        public async Task<IActionResult> ManageSubstances()
+        {
+            var model = await _context.Substances
+                .Include(s => s.Severity)
+                .OrderBy(s => s.Severity!.SeverityLevel)
+                .Select(s => new SubstanceModel
+                {
+                    Id = s.SubstanceId,
+                    Name = s.Name!,
+                    Description = s.Description,
+                    Severity = s.Severity!.SeverityName
+                })
+                .ToListAsync();
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddSubstance()
+        {
+            var vm = new SubstanceFormViewModel
+            {
+                Severities = await _context.Severities
+                    .OrderBy(s => s.SeverityLevel)
+                    .ToListAsync()
+            };
+
+            return View("SubstanceForm", vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddSubstance(SubstanceFormViewModel vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                vm.Severities = await _context.Severities.ToListAsync();
+                return View("SubstanceForm", vm);
+            }
+
+            var existingSubstance = await _context.Substances
+                .AnyAsync(s => s.Name == vm.Name);
+
+            if (existingSubstance)
+            {
+                ModelState.AddModelError(nameof(vm.Name), "A substance with this name already exists.");
+
+                vm.Severities = await _context.Severities.ToListAsync();
+                return View("SubstanceForm", vm);
+            }
+
+            var substance = new Substance
+            {
+                Name = vm.Name,
+                Description = vm.Description,
+                SeverityId = vm.SeverityId
+            };
+
+            _context.Substances.Add(substance);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(ManageSubstances));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditSubstance(Guid id)
+        {
+            var substance = await _context.Substances
+                .FirstOrDefaultAsync(x => x.SubstanceId == id);
+
+            if (substance == null)
+                return NotFound();
+
+            var vm = new SubstanceFormViewModel
+            {
+                SubstanceId = substance.SubstanceId,
+                Name = substance.Name!,
+                Description = substance.Description,
+                SeverityId = substance.SeverityId,
+                Severities = await _context.Severities
+                    .OrderBy(s => s.SeverityLevel)
+                    .ThenBy(s => s.SeverityName)
+                    .ThenBy(s => s.SeverityId)
+                    .ToListAsync()
+            };
+
+            return View("SubstanceForm", vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditSubstance(SubstanceFormViewModel vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                vm.Severities = await _context.Severities.ToListAsync();
+                return View("SubstanceForm", vm);
+            }
+
+            var substance = await _context.Substances
+                .FirstOrDefaultAsync(x => x.SubstanceId == vm.SubstanceId);
+
+            if (substance == null)
+                return NotFound();
+
+            substance.Name = vm.Name;
+            substance.Description = vm.Description;
+            substance.SeverityId = vm.SeverityId;
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(ManageSubstances));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteSubstance(Guid id)
+        {
+            var substance = await _context.Substances
+                .Include(s => s.Tests)
+                .FirstOrDefaultAsync(s => s.SubstanceId == id);
+
+            if (substance == null)
+                return NotFound();
+
+            if (substance.Tests.Any())
+            {
+                TempData["DeleteError"] =
+                    $"<strong>Cannot delete {substance.Name}.</strong><br/>" +
+                    "The substance is assigned to:" +
+                    "<ul>" +
+                    string.Join("", substance.Tests.Select(t =>
+                        $"<li>Test #{t.Number} - {t.Name}</li>")) +
+                    "</ul>";
+
+                return RedirectToAction(nameof(ManageSubstances));
+            }
+
+            _context.Substances.Remove(substance);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(ManageSubstances));
         }
     }
 }
