@@ -2,6 +2,7 @@
 using LabExp.Models.AdminModels;
 using LabExp.Models.Entities;
 using LabExp.Models.ScientistModels;
+using LabExp.Models.SubjectModels;
 using LabExp.Models.SubstanceModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -253,33 +254,75 @@ namespace LabExp.Controllers
 
             return View("ScientistForm", vm);
         }
-
         [HttpPost]
         public async Task<IActionResult> EditScientist(ScientistFormViewModel vm)
         {
             if (!ModelState.IsValid)
             {
+                vm.Clearances = await _context.Clearances
+                    .OrderBy(x => x.LevelName)
+                    .ToListAsync();
+
+                return View("ScientistForm", vm);
+            }
+
+            var scientist = await _userManager.FindByIdAsync(vm.Id.ToString());
+
+            if (scientist == null)
+                return NotFound();
+
+            bool usernameExists = await _userManager.Users.AnyAsync(x =>
+                x.Id != vm.Id &&
+                x.UserName == vm.UserName);
+
+            if (usernameExists)
+            {
+                ModelState.AddModelError(nameof(vm.UserName),
+                    "This username is already taken.");
+
                 vm.Clearances = await _context.Clearances.ToListAsync();
                 return View("ScientistForm", vm);
             }
 
-            var scientist = await _context.Users
-                .FirstOrDefaultAsync(x => x.Id == vm.Id);
+            bool emailExists = await _userManager.Users.AnyAsync(x =>
+                x.Id != vm.Id &&
+                x.Email == vm.Email);
 
-            if (scientist == null)
-                return NotFound();
+            if (emailExists)
+            {
+                ModelState.AddModelError(nameof(vm.Email),
+                    "This email is already in use.");
+
+                vm.Clearances = await _context.Clearances.ToListAsync();
+                return View("ScientistForm", vm);
+            }
 
             scientist.UserName = vm.UserName;
             scientist.Email = vm.Email;
             scientist.ClearanceId = vm.ClearanceId;
 
-            await _userManager.UpdateAsync(scientist);
+            var updateResult = await _userManager.UpdateAsync(scientist);
+
+            if (!updateResult.Succeeded)
+            {
+                foreach (var error in updateResult.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+
+                vm.Clearances = await _context.Clearances.ToListAsync();
+                return View("ScientistForm", vm);
+            }
 
             var currentRoles = await _userManager.GetRolesAsync(scientist);
 
             if (!currentRoles.Contains(vm.Role))
             {
-                await _userManager.RemoveFromRolesAsync(scientist, currentRoles);
+                if (currentRoles.Any())
+                {
+                    await _userManager.RemoveFromRolesAsync(scientist, currentRoles);
+                }
+
                 await _userManager.AddToRoleAsync(scientist, vm.Role);
             }
 
@@ -380,7 +423,10 @@ namespace LabExp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                vm.Severities = await _context.Severities.ToListAsync();
+                vm.Severities = await _context.Severities
+                    .OrderBy(s => s.SeverityLevel)
+                    .ToListAsync();
+
                 return View("SubstanceForm", vm);
             }
 
@@ -389,6 +435,22 @@ namespace LabExp.Controllers
 
             if (substance == null)
                 return NotFound();
+
+            bool exists = await _context.Substances.AnyAsync(x =>
+                x.SubstanceId != vm.SubstanceId &&
+                x.Name == vm.Name);
+
+            if (exists)
+            {
+                ModelState.AddModelError(nameof(vm.Name),
+                    "A substance with this name already exists.");
+
+                vm.Severities = await _context.Severities
+                    .OrderBy(s => s.SeverityLevel)
+                    .ToListAsync();
+
+                return View("SubstanceForm", vm);
+            }
 
             substance.Name = vm.Name;
             substance.Description = vm.Description;
@@ -427,6 +489,193 @@ namespace LabExp.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(ManageSubstances));
+        }
+
+        public async Task<IActionResult> ManageSubjects()
+        {
+            var model = await _context.Subjects
+                .Include(s => s.Status)
+                .Include(s => s.Gender)
+                .OrderBy(s => s.Name)
+                .Select(s => new SubjectModel
+                {
+                    Id = s.SubjectId,
+                    Name = s.Name!,
+                    Age = s.Age,
+                    Status = s.Status!.Name,
+                    Gender = s.Gender!.Name
+                })
+                .ToListAsync();
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddSubject()
+        {
+            var vm = new SubjectFormViewModel
+            {
+                Statuses = await _context.Statuses
+                    .OrderBy(s => s.Name)
+                    .ToListAsync(),
+
+                Genders = await _context.Genders
+                    .OrderBy(g => g.Name)
+                    .ToListAsync()
+            };
+
+            return View("SubjectForm", vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddSubject(SubjectFormViewModel vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                vm.Statuses = await _context.Statuses.ToListAsync();
+                vm.Genders = await _context.Genders.ToListAsync();
+
+                return View("SubjectForm", vm);
+            }
+
+            bool exists = await _context.Subjects
+                .AnyAsync(x => x.Name == vm.Name);
+
+            if (exists)
+            {
+                ModelState.AddModelError(nameof(vm.Name),
+                    "A subject with this name already exists.");
+
+                vm.Statuses = await _context.Statuses.ToListAsync();
+                vm.Genders = await _context.Genders.ToListAsync();
+
+                return View("SubjectForm", vm);
+            }
+
+            var subject = new Subject
+            {
+                Name = vm.Name,
+                Age = vm.Age,
+                StatusId = vm.StatusId,
+                GenderId = vm.GenderId
+            };
+
+            _context.Subjects.Add(subject);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(ManageSubjects));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditSubject(Guid id)
+        {
+            var subject = await _context.Subjects
+                .FirstOrDefaultAsync(x => x.SubjectId == id);
+
+            if (subject == null)
+                return NotFound();
+
+            var vm = new SubjectFormViewModel
+            {
+                SubjectId = subject.SubjectId,
+                Name = subject.Name!,
+                Age = subject.Age,
+                StatusId = subject.StatusId,
+                GenderId = subject.GenderId,
+
+                Statuses = await _context.Statuses
+                    .OrderBy(s => s.Name)
+                    .ToListAsync(),
+
+                Genders = await _context.Genders
+                    .OrderBy(g => g.Name)
+                    .ToListAsync()
+            };
+
+            return View("SubjectForm", vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditSubject(SubjectFormViewModel vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                vm.Statuses = await _context.Statuses
+                    .OrderBy(s => s.Name)
+                    .ToListAsync();
+
+                vm.Genders = await _context.Genders
+                    .OrderBy(g => g.Name)
+                    .ToListAsync();
+
+                return View("SubjectForm", vm);
+            }
+
+            var subject = await _context.Subjects
+                .FirstOrDefaultAsync(x => x.SubjectId == vm.SubjectId);
+
+            if (subject == null)
+                return NotFound();
+
+            bool exists = await _context.Subjects.AnyAsync(x =>
+                x.SubjectId != vm.SubjectId &&
+                x.Name == vm.Name);
+
+            if (exists)
+            {
+                ModelState.AddModelError(nameof(vm.Name),
+                    "A subject with this name already exists.");
+
+                vm.Statuses = await _context.Statuses
+                    .OrderBy(s => s.Name)
+                    .ToListAsync();
+
+                vm.Genders = await _context.Genders
+                    .OrderBy(g => g.Name)
+                    .ToListAsync();
+
+                return View("SubjectForm", vm);
+            }
+
+            subject.Name = vm.Name;
+            subject.Age = vm.Age;
+            subject.StatusId = vm.StatusId;
+            subject.GenderId = vm.GenderId;
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(ManageSubjects));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteSubject(Guid id)
+        {
+            var subject = await _context.Subjects
+                .Include(s => s.Tests)
+                .FirstOrDefaultAsync(x => x.SubjectId == id);
+
+            if (subject == null)
+                return NotFound();
+
+            if (subject.Tests.Any())
+            {
+                TempData["DeleteError"] =
+                    $"<strong>Cannot delete {subject.Name}.</strong><br/>" +
+                    "The subject is assigned to:" +
+                    "<ul>" +
+                    string.Join("", subject.Tests.Select(t =>
+                        $"<li>Test #{t.Number} - {t.Name}</li>")) +
+                    "</ul>";
+
+                return RedirectToAction(nameof(ManageSubjects));
+            }
+
+            _context.Subjects.Remove(subject);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(ManageSubjects));
         }
     }
 }

@@ -1,0 +1,103 @@
+﻿@model LabExp.Models.AdminModels.SubjectFormViewModel
+
+@{
+    ViewData["Title"] = Model.SubjectId == Guid.Empty ? "Add Subject" : "Edit Subject";
+    Layout = "_AdminLayout";
+}
+
+<div class="container mt-4">
+
+    <h2>@ViewData["Title"]</h2>
+
+    <form asp-action="@(Model.SubjectId == Guid.Empty ? "AddSubject" : "EditSubject")"
+          method="post">
+
+        <input asp-for="SubjectId" type="hidden" />
+
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Age" class="form-label"></label>
+            <input asp-for="Age" type="number" min="0" class="form-control" />
+            <span asp-validation-for="Age" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Status</label>
+
+            <select asp-for="StatusId"
+                    class="form-select"
+                    id="statusSelect">
+
+                @foreach (var status in Model.Statuses)
+                {
+                    <option value="@status.StatusId">
+                        @status.Name
+                    </option>
+                }
+
+            </select>
+
+            <span asp-validation-for="StatusId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Gender</label>
+
+            <select asp-for="GenderId"
+                    class="form-select"
+                    id="genderSelect">
+
+                @foreach (var gender in Model.Genders)
+                {
+                    <option value="@gender.GenderId">
+                        @gender.Name
+                    </option>
+                }
+
+            </select>
+
+            <span asp-validation-for="GenderId" class="text-danger"></span>
+        </div>
+
+        <div class="d-flex justify-content-between">
+
+            <a asp-action="ManageSubjects"
+               class="btn btn-secondary">
+                Back
+            </a>
+
+            <button type="submit" class="btn btn-success">
+                @(Model.SubjectId == Guid.Empty ? "Create Subject" : "Save Changes")
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $(function () {
+
+            $('#statusSelect').select2({
+                width: '100%'
+            });
+
+            $('#genderSelect').select2({
+                width: '100%'
+            });
+
+        });
+    </script>
+}

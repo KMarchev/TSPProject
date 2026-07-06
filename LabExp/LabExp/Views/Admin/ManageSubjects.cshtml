@@ -1,0 +1,114 @@
+﻿@{
+    ViewData["Title"] = "Subjects";
+    Layout = "_AdminLayout";
+}
+@model List<LabExp.Models.SubjectModels.SubjectModel>
+
+@if (TempData["DeleteError"] != null)
+{
+    <div class="modal fade" id="deleteErrorModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Cannot Delete Subject</h5>
+                    <button type="button"
+                            class="btn-close btn-close-white"
+                            data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    @Html.Raw(TempData["DeleteError"])
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        OK
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener("load", function () {
+            var modal = new bootstrap.Modal(document.getElementById("deleteErrorModal"));
+            modal.show();
+        });
+    </script>
+}
+
+<div class="container mt-4">
+
+    <h2>Subjects</h2>
+
+    <a asp-action="AddSubject"
+       class="btn btn-success mb-3">
+        Add Subject
+    </a>
+
+    @if (!Model.Any())
+    {
+        <p>No subjects available.</p>
+    }
+
+    @foreach (var subject in Model)
+    {
+        <div class="card mb-2">
+            <div class="card-body">
+
+                <h5>@subject.Name</h5>
+
+                <p>
+                    <strong>Age:</strong>
+                    @subject.Age
+                </p>
+
+                <p>
+                    <strong>Status:</strong>
+                    @subject.Status
+                </p>
+
+                <p>
+                    <strong>Gender:</strong>
+                    @subject.Gender
+                </p>
+
+                <div class="d-flex gap-2">
+
+                    <a asp-action="EditSubject"
+                       asp-route-id="@subject.Id"
+                       class="btn btn-warning">
+                        Edit
+                    </a>
+
+                    <form asp-action="DeleteSubject"
+                          method="post"
+                          id="deleteForm-@subject.Id">
+
+                        <input type="hidden"
+                               name="id"
+                               value="@subject.Id" />
+
+                        <button type="button"
+                                class="btn btn-danger"
+                                onclick="showDeleteModal(
+                            'deleteForm-@subject.Id',
+                            'Delete @subject.Name?')">
+                            Delete
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    }
+
+</div>
+
+<partial name="_ConfirmDeleteModal" />

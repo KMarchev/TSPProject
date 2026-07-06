@@ -43,12 +43,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cTWFuYWdlU2NpZW50aXN0cy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[F:/VS/TSPProject/TSPProject/LabExp/LabExp/Views/Admin/ManageSubjects.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cTWFuYWdlU3ViamVjdHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [F:/VS/TSPProject/TSPProject/LabExp/LabExp/Views/Admin/ManageSubstances.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cTWFuYWdlU3Vic3RhbmNlcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [F:/VS/TSPProject/TSPProject/LabExp/LabExp/Views/Admin/ScientistForm.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cU2NpZW50aXN0Rm9ybS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[F:/VS/TSPProject/TSPProject/LabExp/LabExp/Views/Admin/SubjectForm.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cU3ViamVjdEZvcm0uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [F:/VS/TSPProject/TSPProject/LabExp/LabExp/Views/Admin/SubstanceForm.cshtml]
