@@ -22,9 +22,34 @@ namespace LabExp.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var vm = new AdminDashboardViewModel
+            {
+                TotalScientists = await _context.Users.CountAsync(),
+                TotalSubjects = await _context.Subjects.CountAsync(),
+                TotalTests = await _context.Tests.CountAsync(),
+                TotalSubstances = await _context.Substances.CountAsync(),
+                TotalStatuses = await _context.Statuses.CountAsync(),
+                TotalSeverities = await _context.Severities.CountAsync(),
+                TotalClearances = await _context.Clearances.CountAsync(),
+
+                RecentTests = await _context.Tests
+                    .Include(t => t.Subject)
+                    .Include(t => t.Substance)
+                    .OrderByDescending(t => t.Number)
+                    .Take(5)
+                    .Select(t => new RecentTestViewModel
+                    {
+                        Number = t.Number,
+                        TestName = t.Name,
+                        Subject = t.Subject!.Name!,
+                        Substance = t.Substance!.Name!
+                    })
+                    .ToListAsync()
+            };
+
+            return View(vm);
         }
 
         private async Task<IActionResult> CreateScientistUser(

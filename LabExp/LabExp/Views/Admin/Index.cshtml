@@ -1,85 +1,123 @@
 ﻿@{
-    ViewData["Title"] = "Admin Menu";
+    ViewData["Title"] = "Admin Dashboard";
     Layout = "_AdminLayout";
 }
+@model LabExp.Models.AdminModels.AdminDashboardViewModel
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title>@ViewData["Title"]</title>
+<h2 class="mb-4">
+    Admin Dashboard
+</h2>
 
-    <style>
-            body {
-                font-family: Arial, sans-serif;
-                background-color: #f4f4f4;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100vh;
-            }
+<div class="row">
 
-            .admin-container {
-                background: white;
-                padding: 30px;
-                border-radius: 10px;
-                width: 350px;
-                box-shadow: 0 0 15px rgba(0,0,0,0.1);
-            }
-
-                .admin-container h2 {
-                    text-align: center;
-                    margin-bottom: 25px;
-                }
-
-            .menu-button {
-                display: block;
-                width: 100%;
-                padding: 10px;
-                margin-bottom: 10px;
-                background-color: #0d6efd;
-                color: white;
-                text-decoration: none;
-                text-align: center;
-                border-radius: 5px;
-                box-sizing: border-box;
-            }
-
-                .menu-button:hover {
-                    background-color: #0b5ed7;
-                }
-    </style>
-</head>
-<body>
-
-    <div class="admin-container">
-        <h2>Admin Menu</h2>
-
-        <a asp-controller="Admin"
-           asp-action="ManageScientists"
-           class="menu-button">
-            Manage Scientists
-        </a>
-
-        <a asp-controller="Admin"
-           asp-action="ManageSubstances"
-           class="menu-button">
-            Manage Substances
-        </a>
-
-        <a asp-controller="Admin"
-           asp-action="ManageSubjects"
-           class="menu-button">
-            Manage Subjects
-        </a>
-
-        <a asp-controller="Admin"
-           asp-action="GoBack"
-           class="menu-button">
-            Go back
-        </a>
-
+    <div class="col-md-3 mb-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <h5>Scientists</h5>
+                <h1>@Model.TotalScientists</h1>
+            </div>
+        </div>
     </div>
 
-</body>
-</html>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <h5>Subjects</h5>
+                <h1>@Model.TotalSubjects</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card bg-warning text-dark">
+            <div class="card-body">
+                <h5>Tests</h5>
+                <h1>@Model.TotalTests</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card bg-danger text-white">
+            <div class="card-body">
+                <h5>Substances</h5>
+                <h1>@Model.TotalSubstances</h1>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                Statuses
+            </div>
+            <div class="card-body text-center">
+                <h2>@Model.TotalStatuses</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                Severity Levels
+            </div>
+            <div class="card-body text-center">
+                <h2>@Model.TotalSeverities</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                Clearance Levels
+            </div>
+            <div class="card-body text-center">
+                <h2>@Model.TotalClearances</h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<hr/>
+
+<div class="card mt-4">
+
+    <div class="card-header">
+        Recent Tests
+    </div>
+
+    <table class="table table-striped mb-0">
+
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Test</th>
+                <th>Subject</th>
+                <th>Substance</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+        @foreach(var item in Model.RecentTests)
+        {
+            <tr>
+                <td>@item.Number</td>
+                <td>@item.TestName</td>
+                <td>@item.Subject</td>
+                <td>@item.Substance</td>
+            </tr>
+        }
+
+        </tbody>
+
+    </table>
+
+</div>
