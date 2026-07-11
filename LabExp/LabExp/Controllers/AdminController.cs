@@ -1,9 +1,12 @@
 ﻿using LabExp.Data;
 using LabExp.Models.AdminModels;
+using LabExp.Models.AuditLogModels;
 using LabExp.Models.Entities;
+using LabExp.Models.Interfaces;
 using LabExp.Models.ScientistModels;
 using LabExp.Models.SubjectModels;
 using LabExp.Models.SubstanceModels;
+using LabExp.Models.TestModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,11 +18,13 @@ namespace LabExp.Controllers
     {
         private readonly UserManager<Scientist> _userManager;
         private readonly ApplicationDbContext _context;
+        private readonly IAuditService _auditService;
 
-        public AdminController(UserManager<Scientist> userManager, ApplicationDbContext context)
+        public AdminController(UserManager<Scientist> userManager, ApplicationDbContext context, IAuditService auditService)
         {
             _userManager = userManager;
             _context = context;
+            _auditService = auditService;
         }
 
         public async Task<IActionResult> Index()
@@ -701,6 +706,329 @@ namespace LabExp.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(ManageSubjects));
+        }
+
+        public IActionResult AuditLogs()
+        {
+            var logs = _context.AuditLogs
+                .OrderByDescending(x => x.TimeStamp)
+                .Select(x => new AuditLogViewModel
+                {
+                    TimeStamp = x.TimeStamp,
+                    UserName = x.UserName,
+                    Action = x.Action,
+                    EntityName = x.EntityName,
+                    EntityId = x.EntityId
+                })
+                .ToList();
+
+            return View(logs);
+        }
+
+        private async Task LoadTestLists(TestFormViewModel vm)
+        {
+            vm.Subjects = await _context.Subjects
+                .OrderBy(s => s.Name)
+                .ToListAsync();
+
+
+            vm.Statuses = await _context.Statuses
+                .OrderBy(s => s.Name)
+                .ToListAsync();
+
+
+            vm.Substances = await _context.Substances
+                .Include(s => s.Severity)
+                .OrderBy(s => s.Name)
+                .ToListAsync();
+
+
+            vm.Scientists = await _userManager.Users
+                .Include(u => u.Clearance)
+                .OrderBy(u => u.UserName)
+                .ToListAsync();
+        }
+
+        public async Task<IActionResult> ManageTests()
+        {
+            var userId = Guid.Parse(_userManager.GetUserId(User)!);
+
+            var query = _context.Tests
+                .Include(t => t.Subject)
+                .Include(t => t.Substance)
+                .Include(t => t.Scientists)
+                .AsQueryable();
+
+            var model = query
+                .OrderBy(t => t.Number)
+                .Select(t => new TestModel
+                {
+                    Id = t.TestId,
+                    Number = t.Number,
+                    Name = t.Name,
+                    Subject = t.Subject!.Name,
+                    Substance = t.Substance!.Name,
+                    ScientistCount = t.Scientists.Count
+                })
+                .ToList();
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddTest()
+        {
+            var vm = new TestFormViewModel();
+
+            await LoadTestLists(vm);
+
+            return View("TestForm", vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddTest(TestFormViewModel vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                await LoadTestLists(vm);
+                return View("TestForm", vm);
+            }
+
+
+            bool exists = await _context.Tests
+                .AnyAsync(t => t.Name == vm.Name);
+
+
+            if (exists)
+            {
+                ModelState.AddModelError(nameof(vm.Name),
+                    "A test with this name already exists.");
+
+                await LoadTestLists(vm);
+
+                return View("TestForm", vm);
+            }
+
+
+            int nextNumber = await _context.Tests.AnyAsync()
+                ? await _context.Tests.MaxAsync(t => t.Number) + 1
+                : 1;
+
+
+
+            var scientists = await _context.Scientists
+                .Where(s => vm.ScientistIds.Contains(s.Id))
+                .ToListAsync();
+
+
+
+            var test = new Test
+            {
+                Number = nextNumber,
+
+                Name = vm.Name,
+
+                Description = vm.Description,
+
+                SubjectId = vm.SubjectId,
+
+                SubstanceId = vm.SubstanceId,
+
+                StatusId = vm.StatusId,
+
+                Scientists = scientists
+            };
+
+            _context.Tests.Add(test);
+
+            var subject = await _context.Subjects
+                .FirstAsync(s => s.SubjectId == vm.SubjectId);
+
+
+            subject.StatusId = vm.StatusId;
+
+
+
+            await _context.SaveChangesAsync();
+
+
+            await _auditService.LogAsync(
+                "Created",
+                "Test",
+                test.TestId);
+
+
+
+            return RedirectToAction(nameof(ManageTests));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditTest(Guid id)
+        {
+            var test = await _context.Tests
+                .Include(t => t.Scientists)
+                .FirstOrDefaultAsync(t => t.TestId == id);
+
+            if (test == null)
+                return NotFound();
+
+
+            var vm = new TestFormViewModel
+            {
+                TestId = test.TestId,
+
+                Number = test.Number,
+                Name = test.Name,
+                Description = test.Description,
+
+                SubstanceId = test.SubstanceId,
+                SubjectId = test.SubjectId,
+                StatusId = test.StatusId,
+
+
+                ScientistIds = test.Scientists
+                    .Select(s => s.Id)
+                    .ToList()
+            };
+
+
+            await LoadTestLists(vm);
+
+
+            return View("TestForm", vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditTest(TestFormViewModel vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                await LoadTestLists(vm);
+                return View("TestForm", vm);
+            }
+
+            var test = await _context.Tests
+                .Include(t => t.Scientists)
+                .FirstOrDefaultAsync(t => t.TestId == vm.TestId);
+
+            if (test == null)
+                return NotFound();
+
+            test.Name = vm.Name;
+            test.Description = vm.Description;
+            test.SubjectId = vm.SubjectId;
+            test.SubstanceId = vm.SubstanceId;
+            test.StatusId = vm.StatusId;
+
+
+
+            var scientists = await _context.Scientists
+                .Where(s => vm.ScientistIds.Contains(s.Id))
+                .ToListAsync();
+            test.Scientists.Clear();
+
+            foreach (var scientist in scientists)
+            {
+                test.Scientists.Add(scientist);
+            }
+
+            var subject = await _context.Subjects
+                .FirstAsync(s => s.SubjectId == vm.SubjectId);
+
+            subject.StatusId = vm.StatusId;
+
+            await _context.SaveChangesAsync();
+
+            await _auditService.LogAsync(
+                "Edited",
+                "Test",
+                test.TestId);
+
+            return RedirectToAction(nameof(ManageTests));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteTest(Guid id)
+        {
+            var test = await _context.Tests
+                .FirstOrDefaultAsync(x => x.TestId == id);
+
+            if (test == null)
+                return NotFound();
+
+            int deletedNumber = test.Number;
+
+            _context.Tests.Remove(test);
+
+            var testsAbove = await _context.Tests
+                .Where(x => x.Number > deletedNumber)
+                .ToListAsync();
+
+            foreach (var t in testsAbove)
+            {
+                t.Number--;
+            }
+
+            await _context.SaveChangesAsync();
+
+            await _auditService.LogAsync(
+                "Deleted",
+                "Test",
+                test.TestId
+            );
+
+            return RedirectToAction(nameof(ManageTests));
+        }
+
+        [HttpGet]
+        public IActionResult TestDetails(Guid id)
+        {
+            var test = _context.Tests
+                .Include(t => t.Subject)
+                    .ThenInclude(s => s.Status)
+                .Include(t => t.Status)
+                .Include(t => t.Substance)
+                    .ThenInclude(s => s.Severity)
+                .Include(t => t.Scientists)
+                .FirstOrDefault(t => t.TestId == id);
+
+            if (test == null)
+            {
+                return NotFound();
+            }
+
+            if (!User.IsInRole("Admin"))
+            {
+                var userId = Guid.Parse(_userManager.GetUserId(User)!);
+
+                bool assignedToTest = test.Scientists
+                    .Any(s => s.Id == userId);
+
+                if (!assignedToTest)
+                {
+                    return Forbid();
+                }
+            }
+
+            var clearanceLevel = int.Parse(User.FindFirst("ClearanceLevel")?.Value ?? "0");
+
+            var model = new TestDetailsViewModel
+            {
+                Id = test.TestId,
+                Number = test.Number,
+                Name = clearanceLevel >= 2 ? test.Name : "[REDACTED]",
+                Description = test.Description,
+                Subject = clearanceLevel >= 2 ? test.Subject!.Name : "[REDACTED]",
+                Substance = clearanceLevel >= 2 ? test.Substance!.Name + " - " + test.Substance!.Severity!.SeverityName : "████████████",
+                Status = clearanceLevel >= 2 ? test.Status!.Name : "Unknown",
+                Scientists = test.Scientists
+                    .Select(s => clearanceLevel >= 2 ? s.UserName! : "[REDACTED]")
+                    .ToList()
+            };
+
+            _auditService.LogAsync("Viewed", "Test", test.TestId);
+
+            return View(model);
         }
     }
 }

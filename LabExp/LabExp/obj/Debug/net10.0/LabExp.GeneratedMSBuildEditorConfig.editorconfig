@@ -35,6 +35,10 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[F:/VS/TSPProject/TSPProject/LabExp/LabExp/Views/Admin/AuditLogs.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQXVkaXRMb2dzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [F:/VS/TSPProject/TSPProject/LabExp/LabExp/Views/Admin/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -51,6 +55,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cTWFuYWdlU3Vic3RhbmNlcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[F:/VS/TSPProject/TSPProject/LabExp/LabExp/Views/Admin/ManageTests.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cTWFuYWdlVGVzdHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [F:/VS/TSPProject/TSPProject/LabExp/LabExp/Views/Admin/ScientistForm.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cU2NpZW50aXN0Rm9ybS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -61,6 +69,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [F:/VS/TSPProject/TSPProject/LabExp/LabExp/Views/Admin/SubstanceForm.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cU3Vic3RhbmNlRm9ybS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[F:/VS/TSPProject/TSPProject/LabExp/LabExp/Views/Admin/TestDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVGVzdERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[F:/VS/TSPProject/TSPProject/LabExp/LabExp/Views/Admin/TestForm.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVGVzdEZvcm0uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [F:/VS/TSPProject/TSPProject/LabExp/LabExp/Views/Home/Index.cshtml]

@@ -22,6 +22,35 @@ namespace LabExp.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("LabExp.Models.Entities.AuditLog", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("EntityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("EntityName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AuditLogs");
+                });
+
             modelBuilder.Entity("LabExp.Models.Entities.Clearance", b =>
                 {
                     b.Property<Guid>("ClearanceId")
@@ -235,6 +264,9 @@ namespace LabExp.Migrations
                     b.Property<int>("Number")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("StatusId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("SubjectId")
                         .HasColumnType("uniqueidentifier");
 
@@ -242,6 +274,8 @@ namespace LabExp.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("TestId");
+
+                    b.HasIndex("StatusId");
 
                     b.HasIndex("SubjectId");
 
@@ -439,6 +473,12 @@ namespace LabExp.Migrations
 
             modelBuilder.Entity("LabExp.Models.Entities.Test", b =>
                 {
+                    b.HasOne("LabExp.Models.Entities.Status", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("LabExp.Models.Entities.Subject", "Subject")
                         .WithMany("Tests")
                         .HasForeignKey("SubjectId")
@@ -450,6 +490,8 @@ namespace LabExp.Migrations
                         .HasForeignKey("SubstanceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Status");
 
                     b.Navigation("Subject");
 

@@ -156,6 +156,94 @@
             .status-gray {
                 background: #6c757d;
             }
+
+            @@media print {
+
+                body {
+                    background: white !important;
+                    padding: 0;
+                    margin: 0;
+                    color: black;
+                }
+
+                .no-print {
+                    display: none !important;
+                }
+
+                .secretcorp-document {
+                    width: 100%;
+                    max-width: none;
+                    margin: 0;
+                    padding: 25px;
+                    border: 0 !important;
+                    box-shadow: none !important;
+                }
+
+                .secretcorp-header {
+                    margin-bottom: 20px;
+                    padding-bottom: 15px;
+                }
+
+                .secretcorp-company {
+                    font-size: 48px;
+                }
+
+                .secretcorp-title {
+                    font-size: 32px;
+                }
+
+                .classification-box {
+                    background: black !important;
+                    color: white !important;
+                    -webkit-print-color-adjust: exact;
+                    print-color-adjust: exact;
+                }
+
+                .secretcorp-section {
+                    margin-top: 20px;
+                    page-break-inside: avoid;
+                }
+
+                    .secretcorp-section h3 {
+                        font-size: 24px;
+                        margin-bottom: 10px;
+                    }
+
+                .info-grid {
+                    display: grid;
+                    grid-template-columns: 200px auto;
+                    gap: 10px;
+                    column-gap: 25px;
+                }
+
+                .description-box {
+                    background: #f5f5f5 !important;
+                    border-left: 4px solid black;
+                    -webkit-print-color-adjust: exact;
+                    print-color-adjust: exact;
+                }
+
+                .status-badge {
+                    -webkit-print-color-adjust: exact;
+                    print-color-adjust: exact;
+                }
+
+                .footer-note {
+                    margin-top: 40px;
+                    padding-top: 15px;
+                    border-top: 2px solid #000;
+                    font-size: 10px;
+                    color: #555;
+                    text-align: center;
+                    position: static;
+                    width: auto;
+                }
+            }
+
+            @@page {
+                size: A4;
+                margin: 20mm;
+            }
     </style>
 </head>
 
@@ -266,9 +354,18 @@
         <div class="secretcorp-section">
 
             <a asp-action="Index"
-               class="btn btn-secretcorp">
+               class="btn btn-secretcorp no-print">
                 ← Return to Test List
             </a>
+
+            @if (int.Parse(User.FindFirst("ClearanceLevel")?.Value ?? "0") >= 2)
+                {
+                <a asp-action="ExportPdf"
+                   asp-route-id="@Model.Id"
+                   class="btn btn-primary no-print">
+                    Download PDF
+                </a>
+                }
 
         </div>
 
@@ -277,6 +374,5 @@
         </div>
 
     </div>
-
 </body>
 </html>

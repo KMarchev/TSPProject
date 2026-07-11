@@ -1,0 +1,88 @@
+﻿@{
+    ViewData["Title"] = "Tests";
+    Layout = "_AdminLayout";
+}
+
+@model List<LabExp.Models.TestModels.TestModel>
+
+<div class="container mt-4">
+    <h2>Tests</h2>
+    <a asp-controller="Admin"
+       asp-action="AddTest"
+       class="btn btn-success mb-3">
+
+        Add Test
+
+    </a>
+
+    @if (!Model.Any())
+    {
+        <p>No tests available.</p>
+    }
+
+    @foreach (var test in Model)
+    {
+        <div class="card mb-2">
+            <div class="card-body">
+                <h5>
+                    Test#@test.Number - @test.Name
+                </h5>
+                <p>
+                    @test.Subject
+                </p>
+
+
+                <p>
+                    @test.Substance
+                </p>
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+                        <a asp-controller="Admin"
+                           asp-action="TestDetails"
+                           asp-route-id="@test.Id"
+                           class="btn btn-dark">
+
+                            View Test
+
+                        </a>
+                    </div>
+
+                    <div class="d-flex gap-2">
+
+                        <a asp-action="EditTest"
+                           asp-route-id="@test.Id"
+                           class="btn btn-warning">
+                            Edit
+                        </a>
+                        <form asp-controller="Admin"
+                              asp-action="DeleteTest"
+                              method="post"
+                              id="deleteForm-@test.Id">
+
+                            <input type="hidden"
+                                   name="id"
+                                   value="@test.Id" />
+                            <button type="button"
+                                    class="btn btn-danger"
+                                    onclick="showDeleteModal(
+                                'deleteForm-@test.Id',
+                                'Delete Test #@test.Number?')">
+
+                                Delete
+
+                            </button>
+
+
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<partial name="_ConfirmDeleteModal" />

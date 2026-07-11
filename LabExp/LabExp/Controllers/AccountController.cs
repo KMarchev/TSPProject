@@ -1,6 +1,7 @@
 ﻿using LabExp.Data;
 using LabExp.Models.AccountModels;
 using LabExp.Models.Entities;
+using LabExp.Models.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -16,15 +17,18 @@ namespace LabExp.Controllers
         private readonly SignInManager<Scientist> _signInManager;
         private readonly UserManager<Scientist> _userManager;
         private readonly ApplicationDbContext _context;
+        private readonly IAuditService _auditService;
 
         public AccountController(
             SignInManager<Scientist> signInManager,
             UserManager<Scientist> userManager,
-            ApplicationDbContext context)
+            ApplicationDbContext context,
+            IAuditService auditService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _context = context;
+            _auditService = auditService;
         }
 
         public IActionResult Login()
@@ -79,19 +83,49 @@ namespace LabExp.Controllers
                 identity.RemoveClaim(claim);
             }
 
-            
+
             identity.AddClaim(new Claim("ClearanceLevel", clearanceLevel.ToString()));
             identity.AddClaim(new Claim("ClearanceName", clearanceName));
 
-            await HttpContext.SignInAsync(IdentityConstants.ApplicationScheme, principal);
+            identity.AddClaim(
+                new Claim(
+                    ClaimTypes.Name,
+                    user.UserName!
+                )
+            );
+
+            await HttpContext.SignInAsync(
+                IdentityConstants.ApplicationScheme,
+                principal
+            );
+
+            HttpContext.User = principal;
+
+            await _auditService.LogAsync(
+                "Login",
+                "Account",
+                user.Id
+            );
 
             return RedirectToAction("Index", "Home");
         }
 
-        
+
         public async Task<IActionResult> LogOut()
         {
+            var userIdString = _userManager.GetUserId(User);
+
+            if (Guid.TryParse(userIdString, out var userId))
+            {
+                await _auditService.LogAsync(
+                    "Logout",
+                    "Account",
+                    userId
+                );
+            }
+
             await _signInManager.SignOutAsync();
+
             return RedirectToAction("Login", "Account");
         }
     }

@@ -1,0 +1,115 @@
+﻿@{
+    ViewData["Title"] = "Audit Logs";
+    Layout = "_AdminLayout";
+}
+
+@model List<LabExp.Models.AuditLogModels.AuditLogViewModel>
+
+<div class="container mt-4">
+
+    <h2>Audit Logs</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            No audit logs available.
+        </div>
+    }
+    else
+    {
+        <table class="table table-striped table-bordered table-hover align-middle">
+
+            <thead class="table-dark">
+                <tr>
+                    <th>Date</th>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Entity</th>
+                    <th>Entity Id</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @foreach (var log in Model)
+                {
+                    <tr>
+
+                        <td>
+                            @log.TimeStamp.ToString("dd.MM.yyyy HH:mm")
+                        </td>
+
+                        <td>
+                            @log.UserName
+                        </td>
+
+                        <td>
+
+                            @if (log.Action == "Created")
+                            {
+                                <span class="badge text-bg-success">
+                                    Created
+                                </span>
+                            }
+                            else if (log.Action == "Edited")
+                            {
+                                <span class="badge text-bg-warning">
+                                    Edited
+                                </span>
+                            }
+                            else if (log.Action == "Deleted")
+                            {
+                                <span class="badge text-bg-danger">
+                                    Deleted
+                                </span>
+                            }
+                            else if (log.Action == "Viewed")
+                            {
+                                <span class="badge text-bg-primary">
+                                    Viewed
+                                </span>
+                            }
+                            else if (log.Action == "Downloaded")
+                            {
+                                <span class="badge text-bg-info">
+                                    Downloaded
+                                </span>
+                            }
+                            else if (log.Action == "Login")
+                            {
+                                <span class="badge text-bg-dark">
+                                    Login
+                                </span>
+                            }
+                            else if (log.Action == "Logout")
+                            {
+                                <span class="badge text-bg-secondary">
+                                    Logout
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge text-bg-light">
+                                    @log.Action
+                                </span>
+                            }
+
+                        </td>
+
+                        <td>
+                            @log.EntityName
+                        </td>
+
+                        <td>
+                            @log.EntityId
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+    }
+
+</div>

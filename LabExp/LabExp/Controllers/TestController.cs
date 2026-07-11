@@ -1,10 +1,12 @@
 ﻿using LabExp.Data;
 using LabExp.Models.Entities;
+using LabExp.Models.Interfaces;
 using LabExp.Models.TestModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Rotativa.AspNetCore;
 
 namespace LabExp.Controllers
 {
@@ -12,11 +14,13 @@ namespace LabExp.Controllers
     {
         private readonly UserManager<Scientist> _userManager;
         private readonly ApplicationDbContext _context;
+        private readonly IAuditService _auditService;
 
-        public TestController(UserManager<Scientist> userManager, ApplicationDbContext context)
+        public TestController(UserManager<Scientist> userManager, ApplicationDbContext context, IAuditService auditService)
         {
             _userManager = userManager;
             _context = context;
+            _auditService = auditService;
         }
 
         public IActionResult Index()
@@ -134,6 +138,7 @@ namespace LabExp.Controllers
                 Description = model.Description,
                 SubjectId = subject!.SubjectId,
                 SubstanceId = substance!.SubstanceId,
+                StatusId = model.SubjectStatusId,
 
                 Scientists = scientists
             };
@@ -155,6 +160,8 @@ namespace LabExp.Controllers
                 throw;
             }
 
+            _auditService.LogAsync("Created", "Test", test.TestId);
+
             return RedirectToAction("Index");
         }
 
@@ -163,9 +170,10 @@ namespace LabExp.Controllers
         {
             var test = _context.Tests
                 .Include(t => t.Subject)
-                .ThenInclude(s => s.Status)
+                    .ThenInclude(s => s.Status)
+                .Include(t => t.Status)
                 .Include(t => t.Substance)
-                .ThenInclude(s=>s.Severity)
+                    .ThenInclude(s => s.Severity)
                 .Include(t => t.Scientists)
                 .FirstOrDefault(t => t.TestId == id);
 
@@ -197,11 +205,13 @@ namespace LabExp.Controllers
                 Description = test.Description,
                 Subject = clearanceLevel >= 2 ? test.Subject!.Name : "[REDACTED]",
                 Substance = clearanceLevel >= 2 ? test.Substance!.Name +" - "+ test.Substance!.Severity!.SeverityName : "████████████",
-                Status = clearanceLevel >= 2 ? test.Subject.Status!.Name : "Unknown",
+                Status = clearanceLevel >= 2 ? test.Status!.Name : "Unknown",
                 Scientists = test.Scientists
                     .Select(s => clearanceLevel >= 2 ? s.UserName! : "[REDACTED]")
                     .ToList()
             };
+
+            _auditService.LogAsync("Viewed", "Test", test.TestId);
 
             return View(model);
         }
@@ -238,9 +248,58 @@ namespace LabExp.Controllers
 
             await _context.SaveChangesAsync();
 
+            await _auditService.LogAsync("Deleted", "Test", test.TestId);
 
             return RedirectToAction(nameof(Index));
         }
 
+        public IActionResult ExportPdf(Guid id)
+        {
+            var test = _context.Tests
+                .Include(t => t.Subject)
+                    .ThenInclude(s => s.Status)
+                .Include(t => t.Status)
+                .Include(t => t.Substance)
+                    .ThenInclude(s => s.Severity)
+                .Include(t => t.Scientists)
+                .FirstOrDefault(t => t.TestId == id);
+
+            if (test == null)
+                return NotFound();
+
+
+            var model = new TestDetailsViewModel
+            {
+                Id = test.TestId,
+                Number = test.Number,
+                Name = test.Name,
+                Description = test.Description,
+                Subject = test.Subject!.Name,
+                Substance = test.Substance!.Name +
+                            " - " +
+                            test.Substance.Severity!.SeverityName,
+                Status = test.Status!.Name,
+                Scientists = test.Scientists
+                    .Select(s => s.UserName!)
+                    .ToList()
+            };
+
+            _auditService.LogAsync("Downloaded", "Test", test.TestId);
+
+
+            return new ViewAsPdf("Details", model)
+            {
+                FileName = $"Test_{test.Number}.pdf",
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+                PageMargins = new Rotativa.AspNetCore.Options.Margins
+                {
+                    Top = 10,
+                    Bottom = 10,
+                    Left = 10,
+                    Right = 10
+                },
+                CustomSwitches = "--print-media-type"
+            };
+        }
     }
 }

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "vLg1EUJOxxs=",
+  "dgSpecHash": "EnfU0L4gMgo=",
   "success": true,
   "projectFilePath": "F:\\VS\\TSPProject\\TSPProject\\LabExp\\LabExpTest\\LabExpTests.csproj",
   "expectedPackageFiles": [
@@ -61,6 +61,8 @@
     "C:\\Users\\Kaloyan\\.nuget\\packages\\microsoft.testplatform.objectmodel\\17.14.1\\microsoft.testplatform.objectmodel.17.14.1.nupkg.sha512",
     "C:\\Users\\Kaloyan\\.nuget\\packages\\microsoft.testplatform.testhost\\17.14.1\\microsoft.testplatform.testhost.17.14.1.nupkg.sha512",
     "C:\\Users\\Kaloyan\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
+    "C:\\Users\\Kaloyan\\.nuget\\packages\\questpdf\\2026.7.0\\questpdf.2026.7.0.nupkg.sha512",
+    "C:\\Users\\Kaloyan\\.nuget\\packages\\rotativa.aspnetcore\\1.4.0\\rotativa.aspnetcore.1.4.0.nupkg.sha512",
     "C:\\Users\\Kaloyan\\.nuget\\packages\\system.clientmodel\\1.5.1\\system.clientmodel.1.5.1.nupkg.sha512",
     "C:\\Users\\Kaloyan\\.nuget\\packages\\system.configuration.configurationmanager\\9.0.4\\system.configuration.configurationmanager.9.0.4.nupkg.sha512",
     "C:\\Users\\Kaloyan\\.nuget\\packages\\system.diagnostics.eventlog\\9.0.4\\system.diagnostics.eventlog.9.0.4.nupkg.sha512",

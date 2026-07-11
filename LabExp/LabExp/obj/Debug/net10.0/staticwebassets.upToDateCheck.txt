@@ -61,6 +61,8 @@ wwwroot\lib\jquery\dist\jquery.slim.js
 wwwroot\lib\jquery\dist\jquery.slim.min.js
 wwwroot\lib\jquery\dist\jquery.slim.min.map
 wwwroot\lib\jquery\LICENSE.txt
+wwwroot\Rotativa\wkhtmltoimage.exe
+wwwroot\Rotativa\wkhtmltopdf.exe
 F:\VS\TSPProject\TSPProject\LabExp\LabExp\wwwroot\favicon.ico
 F:\VS\TSPProject\TSPProject\LabExp\LabExp\wwwroot\css\site.css
 F:\VS\TSPProject\TSPProject\LabExp\LabExp\wwwroot\lib\jquery\LICENSE.txt

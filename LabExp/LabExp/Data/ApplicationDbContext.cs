@@ -23,8 +23,16 @@ public class ApplicationDbContext
     public DbSet<Gender> Genders { get; set; }
     public DbSet<Status> Statuses { get; set; }
 
+    public DbSet<AuditLog> AuditLogs { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+
+        builder.Entity<Test>()
+            .HasOne(t => t.Status)
+            .WithMany()
+            .HasForeignKey(t => t.StatusId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

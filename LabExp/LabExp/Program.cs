@@ -1,7 +1,10 @@
 using LabExp.Data;
 using LabExp.Models.Entities;
+using LabExp.Models.Interfaces;
+using LabExp.Models.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Rotativa.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,7 +75,13 @@ builder.Services.AddAuthorization(options =>
         }));
 });
 
+builder.Services.AddScoped<IAuditService, AuditService>();
+
 var app = builder.Build();
+
+RotativaConfiguration.Setup(
+    app.Environment.WebRootPath,
+    "Rotativa");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
