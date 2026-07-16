@@ -598,7 +598,6 @@ F:\VS\TSPProject\TSPProject\LabExp\LabExp\obj\Debug\net10.0\refint\LabExp.dll
 F:\VS\TSPProject\TSPProject\LabExp\LabExp\obj\Debug\net10.0\LabExp.pdb
 F:\VS\TSPProject\TSPProject\LabExp\LabExp\obj\Debug\net10.0\LabExp.genruntimeconfig.cache
 F:\VS\TSPProject\TSPProject\LabExp\LabExp\obj\Debug\net10.0\ref\LabExp.dll
-F:\VS\TSPProject\TSPProject\LabExp\LabExp\obj\Debug\net10.0\compressed\ll7ehb68ot-{0}-gzx96g6g0r-gzx96g6g0r.gz
 F:\VS\TSPProject\TSPProject\LabExp\LabExp\obj\Debug\net10.0\compressed\32ipao0s0d-{0}-x0u9xeax5v-x0u9xeax5v.gz
 F:\VS\TSPProject\TSPProject\LabExp\LabExp\bin\Debug\net10.0\LatoFont\Lato-Black.ttf
 F:\VS\TSPProject\TSPProject\LabExp\LabExp\bin\Debug\net10.0\LatoFont\Lato-BlackItalic.ttf
@@ -637,3 +636,4 @@ F:\VS\TSPProject\TSPProject\LabExp\LabExp\bin\Debug\net10.0\runtimes\win-x64\nat
 F:\VS\TSPProject\TSPProject\LabExp\LabExp\bin\Debug\net10.0\runtimes\win-x86\native\QuestPdfSkia.dll
 F:\VS\TSPProject\TSPProject\LabExp\LabExp\bin\Debug\net10.0\runtimes\win-x86\native\qpdf.dll
 F:\VS\TSPProject\TSPProject\LabExp\LabExp\bin\Debug\net10.0\Rotativa.AspNetCore.dll
+F:\VS\TSPProject\TSPProject\LabExp\LabExp\obj\Debug\net10.0\compressed\ll7ehb68ot-{0}-p0db7yaoxc-p0db7yaoxc.gz

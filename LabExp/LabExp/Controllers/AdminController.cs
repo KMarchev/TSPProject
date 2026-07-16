@@ -550,7 +550,7 @@ namespace LabExp.Controllers
                     .ToListAsync(),
 
                 Genders = await _context.Genders
-                    .OrderBy(g => g.Name)
+                    .OrderByDescending(g => g.Name)
                     .ToListAsync()
             };
 
@@ -615,7 +615,7 @@ namespace LabExp.Controllers
                 GenderId = subject.GenderId,
 
                 Statuses = await _context.Statuses
-                    .OrderBy(s => s.Name)
+                    .OrderByDescending(s => s.Name)
                     .ToListAsync(),
 
                 Genders = await _context.Genders

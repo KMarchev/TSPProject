@@ -7,11 +7,11 @@
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/LabExp.styles.css" asp-append-version="true" />
+    <!--<link rel="stylesheet" href="~/LabExp.styles.css" asp-append-version="true" />-->
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">LabExp</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -21,47 +21,48 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Test" asp-action="Index">Test</a>
+                            <a class="nav-link" asp-area="" asp-controller="Test" asp-action="Index">Test</a>
                         </li>
                         @if (int.Parse(User.FindFirst("ClearanceLevel")?.Value ?? "0")>=2)
                         {
-                            <a class="nav-link text-dark " asp-area="" asp-controller="Subject" asp-action="Subjects">Subjects</a>
+                            <a class="nav-link" asp-area="" asp-controller="Subject" asp-action="Subjects">Subjects</a>
                         }
                         @if (int.Parse(User.FindFirst("ClearanceLevel")?.Value ?? "0") >= 2)
                         {
-                            <a class="nav-link text-dark " asp-area="" asp-controller="Substance" asp-action="Substances">Substances</a>
+                            <a class="nav-link" asp-area="" asp-controller="Substance" asp-action="Substances">Substances</a>
                         }
                         @if (User.IsInRole("Admin"))
                         {
-                            <a class="nav-link text-dark " asp-area="" asp-controller="Scientist" asp-action="Index">Scientist</a>
+                            <a class="nav-link" asp-area="" asp-controller="Scientist" asp-action="Index">Scientist</a>
                         }
                         @if (User.IsInRole("Admin"))
                         {
-                            <a class="nav-link text-dark " asp-area="" asp-controller="Admin" asp-action="Index">Admin Menu</a>
+                            <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Index">Admin Menu</a>
                         }
                         <li class="nav-item ms-auto">
-                            <a class="nav-link text-dark " asp-area="" asp-controller="Account" asp-action="LogOut">Sign Out</a>
+                            <a class="nav-link" asp-area="" asp-controller="Account" asp-action="LogOut">Sign Out</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
+    <main class="main-content">
         <div class="container">
-            &copy; 2026 - LabExp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            @RenderBody()
+        </div>
+    </main>
+
+    <footer class="border-top footer">
+        <div class="container">
+            &copy; 2026 - LabExp -
+            <a asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

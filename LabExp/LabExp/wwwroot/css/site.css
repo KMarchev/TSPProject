@@ -1,61 +1,461 @@
-html {
-  font-size: 14px;
-}
-
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
+/* ===================================
+   SECRET CORP THEME
+=================================== */
 
 html {
-  position: relative;
-  min-height: 100%;
+    font-size: 15px;
+    height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    background: #0f1114;
+    color: #d8d8d8;
+    font-family: Consolas, "Courier New", monospace;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+
+/* ===================================
+   LAYOUT
+=================================== */
+
+header {
+    flex: 0 0 auto;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+.main-content {
+    flex: 1 0 auto;
 }
+
+footer {
+    flex: 0 0 auto;
+}
+
+
+/* ===================================
+   NAVBAR
+=================================== */
+
+.navbar {
+    background: #17191d !important;
+    border-bottom: 2px solid #2e3238 !important;
+}
+
+.navbar-brand {
+    color: #f2f2f2 !important;
+    font-weight: bold;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.nav-link {
+    color: #bdbdbd !important;
+    font-size: .9rem;
+    text-transform: uppercase;
+    transition: .2s;
+}
+
+    .nav-link:hover {
+        color: #8acb88 !important;
+    }
+
+
+/* ===================================
+   CONTAINER
+=================================== */
+
+.container {
+    max-width: 1200px;
+}
+
+
+/* ===================================
+   SECRET DOCUMENT
+=================================== */
 
 .secretcorp-document {
-    max-width: 900px;
-    margin: auto;
-    background: #ffffff;
-    padding: 40px;
+    background: #181b20;
+    border: 1px solid #3b4047;
+    box-shadow: 0 0 20px rgba(0,0,0,.45), inset 0 0 30px rgba(0,0,0,.2);
+    padding: 35px;
 }
+
 
 .secretcorp-header {
-    text-align: center;
-    border-bottom: 3px solid #000;
-    padding-bottom: 20px;
+    border-bottom: 2px solid #5d676f;
     margin-bottom: 30px;
+    padding-bottom: 15px;
 }
 
+
+    .secretcorp-header h1 {
+        color: white;
+        font-size: 2rem;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+    }
+
+
 .secretcorp-title {
-    font-size: 2rem;
-    font-weight: bold;
-    letter-spacing: 1px;
+    color: #9ca3af;
+    letter-spacing: 2px;
+    text-transform: uppercase;
 }
+
 
 .secretcorp-section {
     margin-top: 25px;
+    line-height: 1.8;
 }
 
+
 .secretcorp-label {
+    color: #8acb88;
     font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
 }
+
+
+/* ===================================
+   TERMINAL BOX
+=================================== */
+
+.terminal-box {
+    background: #101214;
+    border-left: 4px solid #8acb88;
+    padding: 15px;
+    margin: 20px 0;
+}
+
+
+.terminal-title {
+    color: #8acb88;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+
+/* ===================================
+   TABLES
+=================================== */
+
+table {
+    background: #1b1e23;
+    color: #ddd;
+}
+
+
+    table thead {
+        background: #252931;
+    }
+
+
+    table td,
+    table th {
+        border-color: #383d44 !important;
+    }
+
+
+/* ===================================
+   FORMS
+=================================== */
+
+.form-control {
+    background: #22252a;
+    border: 1px solid #3d434a;
+    color: #eee;
+}
+
+
+    .form-control:focus {
+        background: #2b2f35;
+        color: white;
+        border-color: #8acb88;
+        box-shadow: none;
+    }
+
+
+    .form-control::placeholder {
+        color: #7f8790;
+    }
+
+.form-select {
+    background-color: #22252a;
+    border: 1px solid #3d434a;
+    color: #d8d8d8;
+    padding: .55rem 2.25rem .55rem .75rem;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 16 16'%3E%3Cpath fill='%238acb88' d='M3.2 5.5L8 10.3l4.8-4.8'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right .75rem center;
+    background-size: 14px;
+}
+
+    .form-select:focus {
+        background-color: #2b2f35;
+        color: white;
+        border-color: #8acb88;
+        box-shadow: none;
+    }
+
+    .form-select option {
+        background: #181b20;
+        color: #d8d8d8;
+    }
+
+
+/* ===================================
+   BUTTONS
+=================================== */
+
+.btn-primary {
+    background: #39414a;
+    border: 1px solid #56616d;
+}
+
+
+    .btn-primary:hover {
+        background: #56616d;
+    }
+
+
+.btn-success {
+    background: #356b35;
+    border: none;
+}
+
+
+.btn-danger {
+    background: #7a3232;
+    border: none;
+}
+
+
+/* ===================================
+   LINKS
+=================================== */
+
+a {
+    color: #8acb88;
+}
+
+
+    a:hover {
+        color: white;
+    }
+
+
+/* ===================================
+   FOOTER
+=================================== */
+
+footer {
+    background: #17191d;
+    border-top: 1px solid #333 !important;
+    color: #cfcfcf !important;
+    padding: 12px 0;
+    font-size: .85rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+
+    footer .container {
+        color: #cfcfcf !important;
+    }
+
+
+    footer a {
+        color: #8acb88 !important;
+    }
+
+
+        footer a:hover {
+            color: white !important;
+        }
+
+/* ===================================
+   SELECT2 DARK SECRETCORP THEME
+=================================== */
+
+.select2-container--default .select2-selection--single,
+.select2-container--default .select2-selection--multiple {
+    background-color: #22252a !important;
+    border: 1px solid #3d434a !important;
+    color: #eee !important;
+}
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered,
+    .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+        color: #eee !important;
+    }
+
+.select2-container--default .select2-selection__placeholder {
+    color: #8b949e !important;
+}
+
+/* Dropdown */
+.select2-container--default .select2-results__option {
+    background-color: #181b20;
+    color: #ddd;
+}
+
+/* Hovered option */
+.select2-container--default .select2-results__option--highlighted {
+    background-color: #356b35 !important;
+    color: white !important;
+}
+
+/* Search box inside dropdown */
+.select2-container--default .select2-search--dropdown .select2-search__field {
+    background-color: #22252a;
+    color: white;
+    border: 1px solid #3d434a;
+}
+
+/* Dropdown panel */
+.select2-container--default .select2-results > .select2-results__options {
+    background-color: #181b20;
+}
+
+/* Selected tags in multi-select */
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #356b35;
+    color: white;
+    border: 1px solid #4b8f4b;
+}
+
+/* Remove X button on selected items */
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    color: white;
+}
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+        color: #ffaaaa;
+    }
+
+
+    /* ===================================
+   SELECT2 SELECTED VALUE FIX
+=================================== */
+
+/* Single selected value */
+.select2-container--default 
+.select2-selection--single 
+.select2-selection__rendered {
+    color: #d8d8d8 !important;
+}
+
+
+/* Single select arrow */
+.select2-container--default 
+.select2-selection--single 
+.select2-selection__arrow b {
+    border-color: #8acb88 transparent transparent transparent !important;
+}
+
+
+/* Multi-select selected tags */
+.select2-container--default 
+.select2-selection--multiple 
+.select2-selection__choice {
+    background-color: #2b332b !important;
+    border: 1px solid #4b8f4b !important;
+    color: #d8d8d8 !important;
+}
+
+
+/* Text inside selected tags */
+.select2-container--default 
+.select2-selection--multiple 
+.select2-selection__choice__display {
+    color: #d8d8d8 !important;
+}
+
+
+/* X button on tags */
+.select2-container--default 
+.select2-selection--multiple 
+.select2-selection__choice__remove {
+    color: #8acb88 !important;
+    border-right: 1px solid #4b8f4b !important;
+}
+
+.select2-container--default 
+.select2-selection--multiple 
+.select2-selection__choice__remove:hover {
+    color: white !important;
+    background-color: #7a3232 !important;
+}
+
+
+/* The actual select box when focused */
+.select2-container--default.select2-container--focus 
+.select2-selection--single,
+.select2-container--default.select2-container--focus 
+.select2-selection--multiple {
+    border-color: #8acb88 !important;
+    outline: none;
+}
+
+
+/* Selected option in dropdown */
+.select2-container--default 
+.select2-results__option[aria-selected="true"] {
+    background-color: #252931 !important;
+    color: #8acb88 !important;
+}
+
+/* ===================================
+   CARD
+=================================== */
+
+.card {
+    background: #181b20;
+    border: 1px solid #3b4047;
+    color: #d8d8d8;
+}
+
+    .card h5 {
+        color: #8acb88;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .card p {
+        color: #cfcfcf;
+    }
+
+/* ===================================
+   SCROLLBAR
+=================================== */
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+
+::-webkit-scrollbar-track {
+    background: #111;
+}
+
+
+::-webkit-scrollbar-thumb {
+    background: #444;
+}
+
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #666;
+    }
